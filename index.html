@@ -60,15 +60,15 @@
     .stat-value.gold { color: var(--gold); }
     .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-    .toolbarRow { padding: 20px 48px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .searchWrap { position: relative; }
+    .toolbarRow { padding: 20px 48px 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .searchWrap { position: relative; flex: 1; max-width: 360px; }
     .searchWrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
-    .searchInput { width: 280px; padding: 9px 14px 9px 36px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; transition: border-color .2s, box-shadow .2s; border-radius: 6px; }
-    .searchInput:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,150,62,.1); }
+    .searchInput { width: 100%; padding: 9px 14px 9px 36px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; transition: border-color .2s, box-shadow .2s; border-radius: 6px; }
+    .searchInput:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,150,62,.1); background: var(--surface); }
     .searchInput::placeholder { color: var(--text-dim); }
-    .resultsCount { font-size: 12px; color: var(--text-dim); }
+    .resultsCount { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
 
-    .filterBar { padding: 16px 48px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; background: var(--surface); }
+    .filterBar { padding: 12px 48px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; background: var(--surface); }
     .filterLabel { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-right: 8px; }
     .filterBtn { padding: 5px 14px; background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; cursor: pointer; transition: all .15s; border-radius: 20px; font-weight: 500; }
     .filterBtn:hover { border-color: var(--gold); color: var(--gold); }
@@ -326,6 +326,12 @@
             <label class="formLabel">Tags (comma-separated)</label>
             <input class="formInput" id="fTags" type="text" placeholder="e.g. Zurich, Mixed-Use, Value-Add">
           </div>
+          <div class="formGroup full">
+            <label class="formLabel" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="checkbox" id="fIsNew" style="width:15px;height:15px;accent-color:var(--gold);cursor:pointer;">
+              Mark as <span style="color:var(--gold);font-weight:700;">NEW</span> (shown with badge &amp; pinned to top)
+            </label>
+          </div>
         </div>
 
         <div class="formActions">
@@ -427,7 +433,6 @@ function getOverrides() {
 function saveOverrides(obj) { localStorage.setItem(OVERRIDES_KEY, JSON.stringify(obj)); }
 
 // ── UTILS ─────────────────────────────────────────────────────────────
-function isNew(dateStr) { return (new Date() - new Date(dateStr)) < 7 * 24 * 60 * 60 * 1000; }
 function formatCHF(n) {
   if (!n) return '–';
   if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + 'M';
@@ -441,7 +446,11 @@ function loadAssets() {
   const overrides = getOverrides();
   const builtins  = BUILTIN_ASSETS.map(a => overrides[a.id] ? {...a, ...overrides[a.id], _overridden: true} : a);
   allAssets = [...custom, ...builtins];
-  allAssets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+  allAssets.sort((a, b) => {
+    if (a.isNew && !b.isNew) return -1;
+    if (!a.isNew && b.isNew) return 1;
+    return new Date(b.dateAdded) - new Date(a.dateAdded);
+  });
 }
 
 // ── STATS ─────────────────────────────────────────────────────────────
@@ -449,7 +458,7 @@ function renderStats() {
   const total    = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
   const yields   = allAssets.filter(a => a.yield).map(a => a.yield);
   const avgY     = yields.length ? yields.reduce((s,y) => s+y,0)/yields.length : 0;
-  const newCount = allAssets.filter(a => isNew(a.dateAdded)).length;
+  const newCount = allAssets.filter(a => a.isNew).length;
   document.getElementById('statsBar').innerHTML = `
     <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Properties</div></div>
     <div class="stat"><div class="stat-label">Total Volume</div><div class="stat-value gold">${formatCHF(total)}</div><div class="stat-sub">Investment Volume</div></div>
@@ -482,7 +491,7 @@ function renderCards() {
   document.getElementById('cardGrid').innerHTML = filtered.map(a => {
     const price = a.salePrice || a.investmentVolume;
     const yld   = a.yield || a.grossYield;
-    const novel = isNew(a.dateAdded);
+    const novel = !!a.isNew;
     const metrics = [
       price ? `<div class="metric"><div class="metric-label">${a.salePrice ? 'Sale Price' : 'Volume'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
       yld   ? `<div class="metric"><div class="metric-label">Yield</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
@@ -537,6 +546,7 @@ function populateForm(asset) {
   document.getElementById('fAnnualRent').value  = asset.annualRentalIncome != null ? asset.annualRentalIncome : '';
   document.getElementById('fDetails').value     = (asset.details||[]).join('\n');
   document.getElementById('fTags').value        = (asset.tags||[]).join(', ');
+  document.getElementById('fIsNew').checked     = !!asset.isNew;
 }
 
 function setFormMode(mode) {
@@ -573,6 +583,7 @@ function resetForm() {
   });
   document.getElementById('fCategory').value = '';
   document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fIsNew').checked = false;
   document.getElementById('fId').readOnly = false;
   document.getElementById('fId').style.opacity = '1';
   setFormMode('new');
@@ -599,7 +610,9 @@ function buildAssetFromForm() {
   if (!id || !title || !location || !category) return null;
 
   const obj = { id, title, location, category, currency: 'CHF',
-    dateAdded: document.getElementById('fDate').value || new Date().toISOString().split('T')[0] };
+    dateAdded: document.getElementById('fDate').value || new Date().toISOString().split('T')[0],
+    isNew: document.getElementById('fIsNew').checked || undefined };
+  if (!obj.isNew) delete obj.isNew;
 
   const sp = parseFloat(document.getElementById('fSalePrice').value);
   const iv = parseFloat(document.getElementById('fInvestVol').value);
