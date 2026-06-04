@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,8 +48,6 @@
     .headerLogo { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; font-weight: 600; }
     .headerTitle { font-size: 13px; font-weight: 400; color: var(--text-muted); border-left: 1px solid var(--border); padding-left: 16px; }
     .headerRight { display: flex; align-items: center; gap: 16px; }
-    .adminBtn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--gold-bg); border: 1px solid #e8d9b4; color: var(--gold); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all .15s; }
-    .adminBtn:hover { background: #faefd5; border-color: var(--gold); }
     .logoutBtn { font-size: 11px; color: var(--text-dim); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; background: none; border: none; transition: color .2s; padding: 6px 0; }
     .logoutBtn:hover { color: var(--text-muted); }
 
@@ -187,11 +185,11 @@
   <div class="loginBox">
     <div class="loginLogo">SREAP</div>
     <div class="loginTitle">Asset Portfolio</div>
-    <div class="loginSub">Vertraulich — Nur autorisierter Zugang</div>
-    <input type="password" id="pwInput" placeholder="Zugangscode eingeben" onkeydown="if(event.key==='Enter')checkPw()">
-    <button class="loginBtn" onclick="checkPw()">Portfolio öffnen</button>
+    <div class="loginSub">Confidential — Authorised Access Only</div>
+    <input type="password" id="pwInput" placeholder="Enter access code" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="loginBtn" onclick="checkPw()">Open Portfolio</button>
     <div class="loginError" id="loginError"></div>
-    <div class="loginDisclaimer">Dieses Dokument dient ausschliesslich zu Informationszwecken und stellt kein verbindliches Angebot oder eine Anlageberatung dar. Eine Weitergabe ohne vorherige schriftliche Zustimmung ist untersagt.</div>
+    <div class="loginDisclaimer">This document is for information purposes only and does not constitute a binding offer or investment advice. Distribution without prior written consent is prohibited.</div>
   </div>
 </div>
 
@@ -203,28 +201,24 @@
       <div class="headerTitle">Swiss Real Estate Asset Portfolio</div>
     </div>
     <div class="headerRight">
-      <button class="adminBtn" onclick="openAdmin()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Admin
-      </button>
       <button class="logoutBtn" onclick="logout()">Logout</button>
     </div>
   </header>
 
-  <div class="disclaimerBar">Vertraulich. Nur zu Informationszwecken. Kein verbindliches Angebot. Alle Angaben vorbehaltlich. Weitergabe nur mit vorheriger schriftlicher Zustimmung.</div>
+  <div class="disclaimerBar">Confidential. For information purposes only. Not a binding offer. All information subject to change. Distribution only with prior written consent.</div>
   <div class="statsBar" id="statsBar"></div>
 
   <div class="toolbarRow">
     <div class="searchWrap">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="searchInput" type="text" id="searchInput" placeholder="Suchen nach Ort, Kategorie, Tag …" oninput="renderCards()">
+      <input class="searchInput" type="text" id="searchInput" placeholder="Search by location, category, tag …" oninput="renderCards()">
     </div>
     <span class="resultsCount" id="resultsCount"></span>
   </div>
 
   <div class="filterBar">
     <span class="filterLabel">Filter:</span>
-    <button class="filterBtn active" onclick="setFilter('all',this)">Alle</button>
+    <button class="filterBtn active" onclick="setFilter('all',this)">All</button>
     <button class="filterBtn" onclick="setFilter('Mixed-Use',this)">Mixed-Use</button>
     <button class="filterBtn" onclick="setFilter('Residential',this)">Residential</button>
     <button class="filterBtn" onclick="setFilter('Development',this)">Development</button>
@@ -233,7 +227,7 @@
   </div>
 
   <div class="grid" id="cardGrid"></div>
-  <footer>Swiss Real Estate Asset Portfolio · 2026 · Vertraulich</footer>
+  <footer>Swiss Real Estate Asset Portfolio · 2026 · Confidential</footer>
 </div>
 
 <!-- ── ADMIN PANEL ─────────────────────────────────────────────────── -->
@@ -242,50 +236,50 @@
   <div class="adminDrawer">
     <div class="adminHeader">
       <div>
-        <div class="adminHeaderTitle">Admin-Konsole</div>
-        <div class="adminHeaderSub">Assets verwalten, bearbeiten &amp; hinzufügen</div>
+        <div class="adminHeaderTitle">Admin Console</div>
+        <div class="adminHeaderSub">Manage, edit &amp; add assets</div>
       </div>
       <button class="adminClose" onclick="closeAdmin()">×</button>
     </div>
     <div class="adminTabs">
-      <div class="adminTab active" id="tabBtnAdd" onclick="switchTab('add',this)">Asset erfassen</div>
-      <div class="adminTab" id="tabBtnList" onclick="switchTab('list',this)">Alle Assets</div>
+      <div class="adminTab active" id="tabBtnAdd" onclick="switchTab('add',this)">Add Asset</div>
+      <div class="adminTab" id="tabBtnList" onclick="switchTab('list',this)">All Assets</div>
     </div>
     <div class="adminBody">
 
-      <!-- ── TAB: ASSET ERFASSEN / BEARBEITEN ──────────────── -->
+      <!-- ── TAB: ADD / EDIT ASSET ──────────────────────────────── -->
       <div class="adminSection active" id="tabAdd">
         <div class="formMode modeAdd" id="formModeAdd">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          Neues Asset hinzufügen
+          Adding new asset
         </div>
         <div class="formMode modeEdit" id="formModeEdit">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          <span id="formModeEditLabel">Bearbeite Asset</span>
-          <button class="formModeCancelBtn" onclick="resetForm()" title="Abbrechen">✕</button>
+          <span id="formModeEditLabel">Editing asset</span>
+          <button class="formModeCancelBtn" onclick="resetForm()" title="Cancel">✕</button>
         </div>
 
         <div class="formGrid">
           <div class="formGroup">
-            <label class="formLabel">Asset-ID *</label>
-            <input class="formInput" id="fId" type="text" placeholder="z.B. ZRH-001">
+            <label class="formLabel">Asset ID *</label>
+            <input class="formInput" id="fId" type="text" placeholder="e.g. ZRH-001">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Datum hinzugefügt</label>
+            <label class="formLabel">Date Added</label>
             <input class="formInput" id="fDate" type="date">
           </div>
           <div class="formGroup full">
-            <label class="formLabel">Titel *</label>
-            <input class="formInput" id="fTitle" type="text" placeholder="z.B. Zürich – Mixed-Use Liegenschaft">
+            <label class="formLabel">Title *</label>
+            <input class="formInput" id="fTitle" type="text" placeholder="e.g. Zurich – Mixed-Use Property">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Ort *</label>
-            <input class="formInput" id="fLocation" type="text" placeholder="z.B. Zürich, Switzerland">
+            <label class="formLabel">Location *</label>
+            <input class="formInput" id="fLocation" type="text" placeholder="e.g. Zurich, Switzerland">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Kategorie *</label>
+            <label class="formLabel">Category *</label>
             <select class="formSelect" id="fCategory">
-              <option value="">– wählen –</option>
+              <option value="">– select –</option>
               <option value="Mixed-Use">Mixed-Use</option>
               <option value="Residential">Residential</option>
               <option value="Development">Development</option>
@@ -297,68 +291,68 @@
           <hr class="formDivider">
 
           <div class="formGroup">
-            <label class="formLabel">Kaufpreis (CHF)</label>
-            <input class="formInput" id="fSalePrice" type="number" placeholder="z.B. 12500000">
+            <label class="formLabel">Sale Price (CHF)</label>
+            <input class="formInput" id="fSalePrice" type="number" placeholder="e.g. 12500000">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Investitionsvolumen (CHF)</label>
-            <input class="formInput" id="fInvestVol" type="number" placeholder="z.B. 15000000">
+            <label class="formLabel">Investment Volume (CHF)</label>
+            <input class="formInput" id="fInvestVol" type="number" placeholder="e.g. 15000000">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Netto-Rendite (%)</label>
-            <input class="formInput" id="fYield" type="number" step="0.01" placeholder="z.B. 4.50">
+            <label class="formLabel">Net Yield (%)</label>
+            <input class="formInput" id="fYield" type="number" step="0.01" placeholder="e.g. 4.50">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Brutto-Rendite (%)</label>
-            <input class="formInput" id="fGrossYield" type="number" step="0.01" placeholder="z.B. 5.10">
+            <label class="formLabel">Gross Yield (%)</label>
+            <input class="formInput" id="fGrossYield" type="number" step="0.01" placeholder="e.g. 5.10">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Nettomiete / Jahr (CHF)</label>
-            <input class="formInput" id="fNetRental" type="number" placeholder="z.B. 480000">
+            <label class="formLabel">Net Rental Income / Year (CHF)</label>
+            <input class="formInput" id="fNetRental" type="number" placeholder="e.g. 480000">
           </div>
           <div class="formGroup">
-            <label class="formLabel">Jahresmiete (CHF)</label>
-            <input class="formInput" id="fAnnualRent" type="number" placeholder="z.B. 520000">
+            <label class="formLabel">Annual Rental Income (CHF)</label>
+            <input class="formInput" id="fAnnualRent" type="number" placeholder="e.g. 520000">
           </div>
 
           <hr class="formDivider">
 
           <div class="formGroup full">
-            <label class="formLabel">Details (eine pro Zeile)</label>
-            <textarea class="formTextarea" id="fDetails" placeholder="z.B.&#10;12 Wohneinheiten&#10;2 Gewerbeflächen&#10;Tiefgarage"></textarea>
-            <span class="formHint">Jede Zeile wird als eigener Bullet angezeigt</span>
+            <label class="formLabel">Details (one per line)</label>
+            <textarea class="formTextarea" id="fDetails" placeholder="e.g.&#10;12 residential units&#10;2 commercial units&#10;Underground parking"></textarea>
+            <span class="formHint">Each line is displayed as a separate bullet point</span>
           </div>
           <div class="formGroup full">
-            <label class="formLabel">Tags (kommagetrennt)</label>
-            <input class="formInput" id="fTags" type="text" placeholder="z.B. Zürich, Mixed-Use, Value-Add">
+            <label class="formLabel">Tags (comma-separated)</label>
+            <input class="formInput" id="fTags" type="text" placeholder="e.g. Zurich, Mixed-Use, Value-Add">
           </div>
         </div>
 
         <div class="formActions">
-          <button class="btnSecondary" onclick="resetForm()">Zurücksetzen</button>
-          <button class="btnPrimary" id="formSaveBtn" onclick="saveAsset()">Asset hinzufügen</button>
+          <button class="btnSecondary" onclick="resetForm()">Reset</button>
+          <button class="btnPrimary" id="formSaveBtn" onclick="saveAsset()">Add Asset</button>
         </div>
         <div class="formFeedback success" id="formSuccess"></div>
         <div class="formFeedback error" id="formError"></div>
       </div>
 
-      <!-- ── TAB: ALLE ASSETS ──────────────────────────────── -->
+      <!-- ── TAB: ALL ASSETS ──────────────────────────────────── -->
       <div class="adminSection" id="tabList">
         <div class="adminListHeader">
           <div class="adminListTitle">Assets (<span id="adminAssetCount">0</span>)</div>
-          <input class="adminSearchInput" type="text" placeholder="Suchen …" oninput="renderAdminList(this.value)">
+          <input class="adminSearchInput" type="text" placeholder="Search …" oninput="renderAdminList(this.value)">
         </div>
         <div id="adminAssetList" class="adminAssetList"></div>
         <div class="adminExport">
-          <div class="adminExportText">Änderungen als JSON exportieren. <strong>Neue Assets</strong> exportieren und in <code>assets.json</code> einfügen; <strong>Bearbeitungen</strong> exportieren zeigt alle überschriebenen Felder.</div>
+          <div class="adminExportText">Export changes as JSON. <strong>Export new assets</strong> and paste into <code>assets.json</code>; <strong>Export edits</strong> shows all overridden fields.</div>
           <div class="exportBtns">
             <button class="exportBtn" onclick="exportCustomJSON()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Neue Assets exportieren
+              Export New Assets
             </button>
             <button class="exportBtn" onclick="exportOverridesJSON()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Bearbeitungen exportieren
+              Export Edits
             </button>
           </div>
         </div>
@@ -372,34 +366,34 @@
 // ── CONFIG ──────────────────────────────────────────────────────────
 const ACCESS_CODE    = 'SREAP2026';
 const CUSTOM_KEY     = 'sreap_custom_assets';
-const OVERRIDES_KEY  = 'sreap_asset_overrides';  // {id: {field: val, ...}}
+const OVERRIDES_KEY  = 'sreap_asset_overrides';
 
 // ── BUILTIN DATA ─────────────────────────────────────────────────────
 const BUILTIN_ASSETS = [
-  {"id":"NRW-001","dateAdded":"2026-06-04","title":"Portfolio NRW, Rhein-Ruhr Region (Germany)","location":"Nordrhein-Westfalen, Germany","category":"Portfolio","investmentVolume":42000000,"currency":"CHF","yield":4.8,"details":["23 Assets","Mixed-use portfolio","Rhein-Ruhr Region"],"tags":["Portfolio","Deutschland","Mixed-Use"]},
-  {"id":"GVA-004","dateAdded":"2026-05-29","title":"Geneva – Commercial & Residential Mixed-Use Asset","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":23000000,"currency":"CHF","yield":3.65,"details":["7 office units","5 apartments","5 storage units","1 retail space","Underground parking with 10 spaces","Additional optimization/development potential"],"tags":["Genf","Büro","Residential"]},
-  {"id":"SIO-001","dateAdded":"2026-05-29","title":"Sion (Valais) – Large Mixed-Use Asset","location":"Sion, Valais","category":"Mixed-Use","salePrice":40000000,"currency":"CHF","yield":5.0,"details":["39 apartments","3 commercial units","Lease negotiations in progress with Migros, Denner, and additional tenants"],"tags":["Wallis","Mixed-Use","Value-Add"]},
+  {"id":"NRW-001","dateAdded":"2026-06-04","title":"Portfolio NRW, Rhein-Ruhr Region (Germany)","location":"Nordrhein-Westfalen, Germany","category":"Portfolio","investmentVolume":42000000,"currency":"CHF","yield":4.8,"details":["23 Assets","Mixed-use portfolio","Rhein-Ruhr Region"],"tags":["Portfolio","Germany","Mixed-Use"]},
+  {"id":"GVA-004","dateAdded":"2026-05-29","title":"Geneva – Commercial & Residential Mixed-Use Asset","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":23000000,"currency":"CHF","yield":3.65,"details":["7 office units","5 apartments","5 storage units","1 retail space","Underground parking with 10 spaces","Additional optimization/development potential"],"tags":["Geneva","Office","Residential"]},
+  {"id":"SIO-001","dateAdded":"2026-05-29","title":"Sion (Valais) – Large Mixed-Use Asset","location":"Sion, Valais","category":"Mixed-Use","salePrice":40000000,"currency":"CHF","yield":5.0,"details":["39 apartments","3 commercial units","Lease negotiations in progress with Migros, Denner, and additional tenants"],"tags":["Valais","Mixed-Use","Value-Add"]},
   {"id":"CDF-001","dateAdded":"2026-05-29","title":"La Chaux-de-Fonds – Mixed-Use Portfolio","location":"La Chaux-de-Fonds, Neuchâtel","category":"Portfolio","investmentVolume":18250000,"currency":"CHF","details":["Portfolio of 4 mixed-use buildings","58 apartments","Retail and office units","Attractive going-in yield","Rental reversion potential","Development upside through attic conversion"],"tags":["Portfolio","Mixed-Use","Development"]},
-  {"id":"CMT-001","dateAdded":"2026-05-29","title":"Crans-Montana (Wallis) – Residential Development","location":"Crans-Montana, Valais","category":"Development","investmentVolume":27000000,"currency":"CHF","details":["65 apartments","Unit distribution to be agreed with the owner","At least one building to remain with the owner","Owner is co-investing in the project"],"tags":["Wallis","Development","Residential"]},
-  {"id":"COL-002","dateAdded":"2026-05-29","title":"Collombey (Wallis) – Apart-Hotel Project","location":"Collombey, Valais","category":"Development","investmentVolume":15000000,"currency":"CHF","yield":5.35,"details":["48 rooms","1 restaurant","Turnkey development project"],"tags":["Wallis","Hotel","Development"]},
-  {"id":"CLA-001","dateAdded":"2026-05-29","title":"Clarens (Vaud)","location":"Clarens, Vaud","category":"Residential","salePrice":15000000,"currency":"CHF","yield":3.24,"annualRentalIncome":486000,"details":["Annual Rental Income: CHF 486'000"],"tags":["Waadt","Residential"]},
-  {"id":"VEY-001","dateAdded":"2026-05-29","title":"Veytaux – Premium Mixed-Use Asset","location":"Veytaux, Vaud","category":"Mixed-Use","investmentVolume":7000000,"currency":"CHF","details":["Recently renovated mixed-use building","Located near Château de Chillon and Lake Geneva","High-end residential positioning","Attractive rental levels","Strong micro-location fundamentals"],"tags":["Waadt","Premium","Renoviert"]},
-  {"id":"GVA-003","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (13M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":13000000,"currency":"CHF","yield":3.70,"grossYield":3.90,"netRentalIncome":502524,"details":["Mixed-use building","Net Rental Income: CHF 502'524"],"tags":["Genf","Mixed-Use"]},
-  {"id":"MCG-001","dateAdded":"2026-05-29","title":"Moulin de Cugy – Stabilised Mixed-Use Asset","location":"Cugy, Vaud","category":"Mixed-Use","investmentVolume":10200000,"currency":"CHF","grossYield":5.13,"details":["Fully stabilised mixed-use asset near Lausanne","Residential, commercial and office units","100% occupancy","Strong cash-flow profile"],"tags":["Waadt","Lausanne","Stabilised","Vollvermietet"]},
+  {"id":"CMT-001","dateAdded":"2026-05-29","title":"Crans-Montana (Valais) – Residential Development","location":"Crans-Montana, Valais","category":"Development","investmentVolume":27000000,"currency":"CHF","details":["65 apartments","Unit distribution to be agreed with the owner","At least one building to remain with the owner","Owner is co-investing in the project"],"tags":["Valais","Development","Residential"]},
+  {"id":"COL-002","dateAdded":"2026-05-29","title":"Collombey (Valais) – Apart-Hotel Project","location":"Collombey, Valais","category":"Development","investmentVolume":15000000,"currency":"CHF","yield":5.35,"details":["48 rooms","1 restaurant","Turnkey development project"],"tags":["Valais","Hotel","Development"]},
+  {"id":"CLA-001","dateAdded":"2026-05-29","title":"Clarens (Vaud)","location":"Clarens, Vaud","category":"Residential","salePrice":15000000,"currency":"CHF","yield":3.24,"annualRentalIncome":486000,"details":["Annual Rental Income: CHF 486'000"],"tags":["Vaud","Residential"]},
+  {"id":"VEY-001","dateAdded":"2026-05-29","title":"Veytaux – Premium Mixed-Use Asset","location":"Veytaux, Vaud","category":"Mixed-Use","investmentVolume":7000000,"currency":"CHF","details":["Recently renovated mixed-use building","Located near Château de Chillon and Lake Geneva","High-end residential positioning","Attractive rental levels","Strong micro-location fundamentals"],"tags":["Vaud","Premium","Renovated"]},
+  {"id":"GVA-003","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (13M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":13000000,"currency":"CHF","yield":3.70,"grossYield":3.90,"netRentalIncome":502524,"details":["Mixed-use building","Net Rental Income: CHF 502'524"],"tags":["Geneva","Mixed-Use"]},
+  {"id":"MCG-001","dateAdded":"2026-05-29","title":"Moulin de Cugy – Stabilised Mixed-Use Asset","location":"Cugy, Vaud","category":"Mixed-Use","investmentVolume":10200000,"currency":"CHF","grossYield":5.13,"details":["Fully stabilised mixed-use asset near Lausanne","Residential, commercial and office units","100% occupancy","Strong cash-flow profile"],"tags":["Vaud","Lausanne","Stabilised","Fully Let"]},
   {"id":"BIN-001","dateAdded":"2026-05-29","title":"Binningen – Mixed-Use Residential Asset","location":"Binningen, Basel-Landschaft","category":"Residential","salePrice":8000000,"currency":"CHF","yield":5.76,"annualRentalIncome":461400,"details":["25 studios","4 apartments","1 restaurant","4 private parking spaces","11 restaurant parking spaces"],"tags":["Basel","Residential","High-Yield"]},
-  {"id":"SIE-001","dateAdded":"2026-05-29","title":"Sierre (Wallis) – Residential Development","location":"Sierre, Valais","category":"Development","investmentVolume":11000000,"currency":"CHF","details":["16 apartments","Turnkey development project"],"tags":["Wallis","Development","Residential"]},
-  {"id":"GVA-002","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (7.2M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":7210000,"currency":"CHF","yield":4.8,"netRentalIncome":350000,"details":["1'200 m² over 4 floors","50 parking spaces"],"tags":["Genf","Mixed-Use","Parking"]},
-  {"id":"ORB-001","dateAdded":"2026-05-29","title":"Orbe – Residential Building","location":"Orbe, Vaud","category":"Residential","investmentVolume":5300000,"currency":"CHF","details":["12 fully renovated apartments","Condominium conversion (PPE) strategy","Additional value-creation potential"],"tags":["Waadt","Residential","Renoviert"]},
-  {"id":"MTX-001","dateAdded":"2026-05-29","title":"Montreux (Vaud) – Mixed-Use Building","location":"Montreux, Vaud","category":"Mixed-Use","salePrice":5800000,"currency":"CHF","yield":3.25,"netRentalIncome":189000,"details":["9 apartments","3 storage units","1 retail space","1 outdoor parking space"],"tags":["Waadt","Mixed-Use"]},
+  {"id":"SIE-001","dateAdded":"2026-05-29","title":"Sierre (Valais) – Residential Development","location":"Sierre, Valais","category":"Development","investmentVolume":11000000,"currency":"CHF","details":["16 apartments","Turnkey development project"],"tags":["Valais","Development","Residential"]},
+  {"id":"GVA-002","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (7.2M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":7210000,"currency":"CHF","yield":4.8,"netRentalIncome":350000,"details":["1'200 m² over 4 floors","50 parking spaces"],"tags":["Geneva","Mixed-Use","Parking"]},
+  {"id":"ORB-001","dateAdded":"2026-05-29","title":"Orbe – Residential Building","location":"Orbe, Vaud","category":"Residential","investmentVolume":5300000,"currency":"CHF","details":["12 fully renovated apartments","Condominium conversion (PPE) strategy","Additional value-creation potential"],"tags":["Vaud","Residential","Renovated"]},
+  {"id":"MTX-001","dateAdded":"2026-05-29","title":"Montreux (Vaud) – Mixed-Use Building","location":"Montreux, Vaud","category":"Mixed-Use","salePrice":5800000,"currency":"CHF","yield":3.25,"netRentalIncome":189000,"details":["9 apartments","3 storage units","1 retail space","1 outdoor parking space"],"tags":["Vaud","Mixed-Use"]},
   {"id":"NEU-001","dateAdded":"2026-05-29","title":"Neuveville – Residential Building","location":"Neuveville, Bern","category":"Residential","investmentVolume":5200000,"currency":"CHF","details":["10 apartments","Located near Lake Biel and train station","Stable in-place income","Value-add potential through extension and rental reversion strategies"],"tags":["Bern","Residential","Value-Add"]},
-  {"id":"COL-001","dateAdded":"2026-05-29","title":"Collombey (Wallis) – Medical Clinic","location":"Collombey, Valais","category":"Commercial","salePrice":7500000,"currency":"CHF","yield":2.46,"yieldPotential":4.84,"details":["Medical clinic asset","Current Yield: 2.46%","Potential Yield: 4.84%","Value-add potential"],"tags":["Wallis","Klinik","Value-Add"]},
-  {"id":"GVA-001","dateAdded":"2026-05-29","title":"Geneva – Residential & Commercial Building","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":10800000,"currency":"CHF","yield":2.62,"grossYield":3.37,"grossIncome":364299,"operatingExpenses":81794,"netRentalIncome":282505,"landArea":139,"livingArea":670,"commercialArea":140,"totalArea":810,"pricePerSqm":13333,"marketPriceRange":"14'000–17'000","details":["9 residential units + 1 commercial unit","Land Area: 139 m²","Total Area: ≈ 810 m²","Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"],"tags":["Genf","Residential","Commercial"]}
+  {"id":"COL-001","dateAdded":"2026-05-29","title":"Collombey (Valais) – Medical Clinic","location":"Collombey, Valais","category":"Commercial","salePrice":7500000,"currency":"CHF","yield":2.46,"yieldPotential":4.84,"details":["Medical clinic asset","Current Yield: 2.46%","Potential Yield: 4.84%","Value-add potential"],"tags":["Valais","Clinic","Value-Add"]},
+  {"id":"GVA-001","dateAdded":"2026-05-29","title":"Geneva – Residential & Commercial Building","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":10800000,"currency":"CHF","yield":2.62,"grossYield":3.37,"grossIncome":364299,"operatingExpenses":81794,"netRentalIncome":282505,"landArea":139,"livingArea":670,"commercialArea":140,"totalArea":810,"pricePerSqm":13333,"marketPriceRange":"14'000–17'000","details":["9 residential units + 1 commercial unit","Land Area: 139 m²","Total Area: ≈ 810 m²","Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"],"tags":["Geneva","Residential","Commercial"]}
 ];
 
 // ── STATE ────────────────────────────────────────────────────────────
-let allAssets   = [];
+let allAssets    = [];
 let activeFilter = 'all';
-let editMode     = false;  // false = new asset, string = id being edited
+let editMode     = false;
 
 // ── AUTH ─────────────────────────────────────────────────────────────
 function checkPw() {
@@ -407,8 +401,10 @@ function checkPw() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
     init();
+    // Open admin panel automatically if ?admin in URL
+    if (new URLSearchParams(window.location.search).has('admin')) openAdmin();
   } else {
-    document.getElementById('loginError').textContent = 'Falscher Zugangscode.';
+    document.getElementById('loginError').textContent = 'Incorrect access code.';
     document.getElementById('pwInput').value = '';
   }
 }
@@ -434,8 +430,8 @@ function saveOverrides(obj) { localStorage.setItem(OVERRIDES_KEY, JSON.stringify
 function isNew(dateStr) { return (new Date() - new Date(dateStr)) < 7 * 24 * 60 * 60 * 1000; }
 function formatCHF(n) {
   if (!n) return '–';
-  if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + ' Mio.';
-  return 'CHF ' + n.toLocaleString('de-CH');
+  if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + 'M';
+  return 'CHF ' + n.toLocaleString('en-CH');
 }
 function formatYield(y) { return (y || y === 0) ? y.toFixed(2) + '%' : null; }
 
@@ -443,23 +439,22 @@ function formatYield(y) { return (y || y === 0) ? y.toFixed(2) + '%' : null; }
 function loadAssets() {
   const custom    = getCustomAssets();
   const overrides = getOverrides();
-  // Apply overrides to builtins
-  const builtins = BUILTIN_ASSETS.map(a => overrides[a.id] ? {...a, ...overrides[a.id], _overridden: true} : a);
+  const builtins  = BUILTIN_ASSETS.map(a => overrides[a.id] ? {...a, ...overrides[a.id], _overridden: true} : a);
   allAssets = [...custom, ...builtins];
   allAssets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
 }
 
 // ── STATS ─────────────────────────────────────────────────────────────
 function renderStats() {
-  const total  = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
-  const yields = allAssets.filter(a => a.yield).map(a => a.yield);
-  const avgY   = yields.length ? yields.reduce((s,y) => s+y,0)/yields.length : 0;
+  const total    = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
+  const yields   = allAssets.filter(a => a.yield).map(a => a.yield);
+  const avgY     = yields.length ? yields.reduce((s,y) => s+y,0)/yields.length : 0;
   const newCount = allAssets.filter(a => isNew(a.dateAdded)).length;
   document.getElementById('statsBar').innerHTML = `
-    <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Liegenschaften</div></div>
-    <div class="stat"><div class="stat-label">Gesamtvolumen</div><div class="stat-value gold">${formatCHF(total)}</div><div class="stat-sub">Investitionsvolumen</div></div>
-    <div class="stat"><div class="stat-label">Ø Rendite</div><div class="stat-value">${avgY.toFixed(2)}%</div><div class="stat-sub">Netto-Rendite Ø</div></div>
-    ${newCount > 0 ? `<div class="stat"><div class="stat-label">Neu</div><div class="stat-value gold">${newCount}</div><div class="stat-sub">Diese Woche</div></div>` : ''}
+    <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Properties</div></div>
+    <div class="stat"><div class="stat-label">Total Volume</div><div class="stat-value gold">${formatCHF(total)}</div><div class="stat-sub">Investment Volume</div></div>
+    <div class="stat"><div class="stat-label">Avg. Yield</div><div class="stat-value">${avgY.toFixed(2)}%</div><div class="stat-sub">Average Net Yield</div></div>
+    ${newCount > 0 ? `<div class="stat"><div class="stat-label">New</div><div class="stat-value gold">${newCount}</div><div class="stat-sub">This Week</div></div>` : ''}
   `;
 }
 
@@ -483,29 +478,29 @@ function getFiltered() {
 // ── CARDS ─────────────────────────────────────────────────────────────
 function renderCards() {
   const filtered = getFiltered();
-  document.getElementById('resultsCount').textContent = `${filtered.length} Objekt${filtered.length !== 1 ? 'e' : ''}`;
+  document.getElementById('resultsCount').textContent = `${filtered.length} propert${filtered.length !== 1 ? 'ies' : 'y'}`;
   document.getElementById('cardGrid').innerHTML = filtered.map(a => {
     const price = a.salePrice || a.investmentVolume;
     const yld   = a.yield || a.grossYield;
     const novel = isNew(a.dateAdded);
     const metrics = [
-      price ? `<div class="metric"><div class="metric-label">${a.salePrice?'Kaufpreis':'Volumen'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
-      yld   ? `<div class="metric"><div class="metric-label">Rendite</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
-      a.yieldPotential  ? `<div class="metric"><div class="metric-label">Pot. Rendite</div><div class="metric-value">${formatYield(a.yieldPotential)}</div></div>` : '',
-      a.netRentalIncome ? `<div class="metric"><div class="metric-label">Nettomiete/J.</div><div class="metric-value">${formatCHF(a.netRentalIncome)}</div></div>` : '',
-      a.annualRentalIncome ? `<div class="metric"><div class="metric-label">Jahresmiete</div><div class="metric-value">${formatCHF(a.annualRentalIncome)}</div></div>` : '',
+      price ? `<div class="metric"><div class="metric-label">${a.salePrice ? 'Sale Price' : 'Volume'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
+      yld   ? `<div class="metric"><div class="metric-label">Yield</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
+      a.yieldPotential  ? `<div class="metric"><div class="metric-label">Pot. Yield</div><div class="metric-value">${formatYield(a.yieldPotential)}</div></div>` : '',
+      a.netRentalIncome ? `<div class="metric"><div class="metric-label">Net Rent / Yr</div><div class="metric-value">${formatCHF(a.netRentalIncome)}</div></div>` : '',
+      a.annualRentalIncome ? `<div class="metric"><div class="metric-label">Annual Rent</div><div class="metric-value">${formatCHF(a.annualRentalIncome)}</div></div>` : '',
     ].filter(Boolean).join('');
-    const dateStr = new Date(a.dateAdded).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const dateStr = new Date(a.dateAdded).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'});
     return `
       <div class="card${novel?' isNew':''}">
-        ${novel?'<div class="newBadge">Neu</div>':''}
+        ${novel?'<div class="newBadge">New</div>':''}
         <div class="cardCategory">${a.category}</div>
         <div class="cardTitle">${a.title}</div>
         <div class="cardLocation"><span class="locDot"></span>${a.location}</div>
         <div class="cardMetrics">${metrics}</div>
         ${a.details?.length ? `<ul class="cardDetails">${a.details.map(d=>`<li>${d}</li>`).join('')}</ul>` : ''}
         ${a.tags?.length ? `<div class="cardTags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
-        <div class="cardDate">Hinzugefügt: ${dateStr} · ID: ${a.id}</div>
+        <div class="cardDate">Added: ${dateStr} · ID: ${a.id}</div>
       </div>`;
   }).join('');
 }
@@ -545,27 +540,24 @@ function populateForm(asset) {
 }
 
 function setFormMode(mode) {
-  // mode: 'new' | 'edit'
   const modeAdd  = document.getElementById('formModeAdd');
   const modeEdit = document.getElementById('formModeEdit');
   const saveBtn  = document.getElementById('formSaveBtn');
   const idInput  = document.getElementById('fId');
   modeAdd.classList.toggle('visible',  mode === 'new');
   modeEdit.classList.toggle('visible', mode === 'edit');
-  saveBtn.textContent = mode === 'edit' ? 'Änderungen speichern' : 'Asset hinzufügen';
+  saveBtn.textContent = mode === 'edit' ? 'Save Changes' : 'Add Asset';
   idInput.readOnly    = mode === 'edit';
   idInput.style.opacity = mode === 'edit' ? '.6' : '1';
 }
 
 function editAsset(id) {
-  // Find asset (merged with overrides)
   const asset = allAssets.find(a => a.id === id);
   if (!asset) return;
   editMode = id;
   populateForm(asset);
   setFormMode('edit');
-  document.getElementById('formModeEditLabel').textContent = `Bearbeite: ${id}`;
-  // switch to add tab
+  document.getElementById('formModeEditLabel').textContent = `Editing: ${id}`;
   document.querySelectorAll('.adminTab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.adminSection').forEach(s => s.classList.remove('active'));
   document.getElementById('tabBtnAdd').classList.add('active');
@@ -632,34 +624,30 @@ function buildAssetFromForm() {
 function saveAsset() {
   hideFeedback();
   const obj = buildAssetFromForm();
-  if (!obj) { showFeedback('error', 'Bitte alle Pflichtfelder ausfüllen (ID, Titel, Ort, Kategorie).'); return; }
+  if (!obj) { showFeedback('error', 'Please fill in all required fields (ID, Title, Location, Category).'); return; }
 
   const isBuiltin = BUILTIN_ASSETS.some(a => a.id === obj.id);
   const custom    = getCustomAssets();
   const overrides = getOverrides();
 
   if (editMode) {
-    // EDIT MODE
     if (isBuiltin) {
-      // Store changed fields as override (all writable fields)
       const {id, ...rest} = obj;
       overrides[id] = rest;
       saveOverrides(overrides);
     } else {
-      // Update in custom array
       const idx = custom.findIndex(a => a.id === obj.id);
       if (idx >= 0) { const {_custom, ...rest} = custom[idx]; custom[idx] = {...rest, ...obj, _custom: true}; }
       saveCustomAssets(custom);
     }
-    showFeedback('success', `✓ Asset «${obj.id}» erfolgreich aktualisiert.`);
+    showFeedback('success', `✓ Asset "${obj.id}" updated successfully.`);
   } else {
-    // NEW ASSET MODE
     const allIds = [...custom.map(a=>a.id), ...BUILTIN_ASSETS.map(a=>a.id)];
-    if (allIds.includes(obj.id)) { showFeedback('error', `ID «${obj.id}» existiert bereits. Bitte eine andere ID wählen.`); return; }
+    if (allIds.includes(obj.id)) { showFeedback('error', `ID "${obj.id}" already exists. Please choose a different ID.`); return; }
     obj._custom = true;
     custom.unshift(obj);
     saveCustomAssets(custom);
-    showFeedback('success', `✓ Asset «${obj.id}» erfolgreich hinzugefügt.`);
+    showFeedback('success', `✓ Asset "${obj.id}" added successfully.`);
     resetForm();
   }
 
@@ -672,12 +660,12 @@ function saveAsset() {
 function deleteAsset(id) {
   const isBuiltin = BUILTIN_ASSETS.some(a => a.id === id);
   if (isBuiltin) {
-    if (!confirm(`«${id}» ist ein Standard-Asset. Sollen die Bearbeitungen zurückgesetzt werden?`)) return;
+    if (!confirm(`"${id}" is a built-in asset. Reset all edits to this asset?`)) return;
     const ov = getOverrides();
     delete ov[id];
     saveOverrides(ov);
   } else {
-    if (!confirm(`Asset «${id}» wirklich löschen?`)) return;
+    if (!confirm(`Delete asset "${id}"?`)) return;
     saveCustomAssets(getCustomAssets().filter(a => a.id !== id));
   }
   loadAssets();
@@ -687,8 +675,8 @@ function deleteAsset(id) {
 }
 
 function renderAdminList(query) {
-  const q         = (query || '').toLowerCase();
-  const customIds  = new Set(getCustomAssets().map(a => a.id));
+  const q           = (query || '').toLowerCase();
+  const customIds   = new Set(getCustomAssets().map(a => a.id));
   const overrideIds = new Set(Object.keys(getOverrides()));
 
   const visible = allAssets.filter(a => {
@@ -702,11 +690,11 @@ function renderAdminList(query) {
     const isOverridden = !isCustom && overrideIds.has(a.id);
     const price = a.salePrice || a.investmentVolume;
     let badge = '';
-    if (isCustom)     badge = '<span class="adminAssetBadge custom">Neu</span>';
-    else if (isOverridden) badge = '<span class="adminAssetBadge overridden">Bearbeitet</span>';
-    else              badge = '<span class="adminAssetBadge builtin">Standard</span>';
+    if (isCustom)          badge = '<span class="adminAssetBadge custom">New</span>';
+    else if (isOverridden) badge = '<span class="adminAssetBadge overridden">Edited</span>';
+    else                   badge = '<span class="adminAssetBadge builtin">Built-in</span>';
 
-    const deleteLbl = isCustom ? 'Löschen' : (isOverridden ? 'Zurücksetzen' : '');
+    const deleteLbl = isCustom ? 'Delete' : (isOverridden ? 'Reset' : '');
     const deleteCls = isCustom ? 'deleteBtn' : 'resetBtn';
 
     return `
@@ -717,7 +705,7 @@ function renderAdminList(query) {
         </div>
         ${badge}
         <div class="adminAssetBtns">
-          <button class="editBtn" onclick="editAsset('${a.id}')">Bearbeiten</button>
+          <button class="editBtn" onclick="editAsset('${a.id}')">Edit</button>
           ${(isCustom || isOverridden) ? `<button class="${deleteCls}" onclick="deleteAsset('${a.id}')">${deleteLbl}</button>` : ''}
         </div>
       </div>`;
@@ -727,14 +715,14 @@ function renderAdminList(query) {
 // ── EXPORT ────────────────────────────────────────────────────────────
 function exportCustomJSON() {
   const custom = getCustomAssets();
-  if (!custom.length) { alert('Keine neuen Assets vorhanden.'); return; }
+  if (!custom.length) { alert('No new assets to export.'); return; }
   const clean = custom.map(({_custom, ...rest}) => rest);
-  downloadJSON(clean, 'sreap_neue_assets.json');
+  downloadJSON(clean, 'sreap_new_assets.json');
 }
 function exportOverridesJSON() {
   const ov = getOverrides();
-  if (!Object.keys(ov).length) { alert('Keine Bearbeitungen vorhanden.'); return; }
-  downloadJSON(ov, 'sreap_bearbeitungen.json');
+  if (!Object.keys(ov).length) { alert('No edits to export.'); return; }
+  downloadJSON(ov, 'sreap_edits.json');
 }
 function downloadJSON(data, filename) {
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -749,7 +737,6 @@ function init() {
   loadAssets();
   renderStats();
   renderCards();
-  // Set initial form mode indicator (hidden until admin opens)
   setFormMode('new');
 }
 </script>
