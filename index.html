@@ -1,112 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SREAP – Swiss Real Estate Asset Portfolio</title>
   <style>
     :root {
-      --bg: #0d0d0d;
-      --surface: #151515;
-      --surface2: #1c1c1c;
-      --border: #2a2a2a;
-      --gold: #c9a84c;
-      --gold-light: #e2c17a;
-      --text: #e8e8e8;
-      --text-muted: #888;
-      --text-dim: #555;
-      --green: #4caf84;
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --surface2: #f9f9f8;
+      --border: #e5e4e0;
+      --border-light: #efefed;
+      --gold: #b8963e;
+      --gold-light: #d4af63;
+      --gold-bg: #fdf8ef;
+      --text: #1a1a18;
+      --text-muted: #6b6b67;
+      --text-dim: #a0a09a;
+      --green: #2d7a5a;
+      --green-bg: #f0f7f3;
+      --blue: #2a6099;
+      --blue-bg: #eef4fb;
+      --red: #c0392b;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; min-height: 100vh; }
 
-    /* LOGIN */
+    /* ── LOGIN ───────────────────────────────────────────────────── */
     #loginScreen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 100; }
-    .loginBox { width: 360px; padding: 48px 40px; border: 1px solid var(--border); background: var(--surface); text-align: center; }
-    .loginLogo { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+    .loginBox { width: 380px; padding: 48px 44px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-md); text-align: center; }
+    .loginLogo { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
     .loginTitle { font-size: 22px; font-weight: 300; color: var(--text); margin-bottom: 6px; }
     .loginSub { font-size: 12px; color: var(--text-muted); margin-bottom: 36px; }
-    .loginBox input[type="password"] { width: 100%; padding: 12px 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 15px; outline: none; transition: border-color .2s; margin-bottom: 12px; }
-    .loginBox input[type="password"]:focus { border-color: var(--gold); }
-    .loginBtn { width: 100%; padding: 12px; background: var(--gold); color: #000; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; cursor: pointer; transition: background .2s; }
+    .loginBox input[type="password"] { width: 100%; padding: 11px 16px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 14px; outline: none; transition: border-color .2s; margin-bottom: 12px; border-radius: 4px; }
+    .loginBox input[type="password"]:focus { border-color: var(--gold); background: var(--surface); }
+    .loginBtn { width: 100%; padding: 12px; background: var(--gold); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; cursor: pointer; transition: background .2s; border-radius: 4px; }
     .loginBtn:hover { background: var(--gold-light); }
-    .loginError { color: #e55; font-size: 12px; margin-top: 10px; height: 16px; }
-    .loginDisclaimer { margin-top: 28px; font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+    .loginError { color: var(--red); font-size: 12px; margin-top: 10px; height: 16px; }
+    .loginDisclaimer { margin-top: 28px; font-size: 10px; color: var(--text-dim); line-height: 1.7; }
 
-    /* MAIN */
+    /* ── MAIN ────────────────────────────────────────────────────── */
     #mainContent { display: none; }
-    header { border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; background: var(--bg); z-index: 10; }
-    .headerLogo { font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; }
-    .headerTitle { font-size: 13px; font-weight: 300; color: var(--text-muted); }
-    .logoutBtn { font-size: 11px; color: var(--text-dim); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; background: none; border: none; transition: color .2s; }
+    header { border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; background: var(--surface); z-index: 10; box-shadow: 0 1px 0 var(--border); }
+    .headerLeft { display: flex; align-items: center; gap: 16px; }
+    .headerLogo { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; font-weight: 600; }
+    .headerTitle { font-size: 13px; font-weight: 400; color: var(--text-muted); border-left: 1px solid var(--border); padding-left: 16px; }
+    .headerRight { display: flex; align-items: center; gap: 16px; }
+    .adminBtn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--gold-bg); border: 1px solid #e8d9b4; color: var(--gold); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all .15s; }
+    .adminBtn:hover { background: #faefd5; border-color: var(--gold); }
+    .logoutBtn { font-size: 11px; color: var(--text-dim); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; background: none; border: none; transition: color .2s; padding: 6px 0; }
     .logoutBtn:hover { color: var(--text-muted); }
-    .disclaimerBar { background: #111; border-bottom: 1px solid var(--border); padding: 10px 48px; font-size: 10.5px; color: var(--text-dim); line-height: 1.5; }
-    .statsBar { padding: 20px 48px; display: flex; gap: 48px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+
+    .disclaimerBar { background: #fffbf2; border-bottom: 1px solid #f0e8cc; padding: 8px 48px; font-size: 10.5px; color: #9a8a5a; line-height: 1.5; }
+
+    .statsBar { padding: 24px 48px; display: flex; gap: 40px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; }
     .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
-    .stat-value { font-size: 20px; font-weight: 300; color: var(--gold); }
+    .stat-value { font-size: 22px; font-weight: 300; color: var(--text); letter-spacing: -.5px; }
+    .stat-value.gold { color: var(--gold); }
     .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .toolbarRow { padding: 16px 48px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .searchInput { width: 280px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; transition: border-color .2s; }
-    .searchInput:focus { border-color: var(--gold); }
+
+    .toolbarRow { padding: 20px 48px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .searchWrap { position: relative; }
+    .searchWrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+    .searchInput { width: 280px; padding: 9px 14px 9px 36px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; transition: border-color .2s, box-shadow .2s; border-radius: 6px; }
+    .searchInput:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,150,62,.1); }
     .searchInput::placeholder { color: var(--text-dim); }
-    .resultsCount { font-size: 11px; color: var(--text-dim); letter-spacing: .5px; }
-    .filterBar { padding: 16px 48px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .resultsCount { font-size: 12px; color: var(--text-dim); }
+
+    .filterBar { padding: 16px 48px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; background: var(--surface); }
     .filterLabel { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-right: 8px; }
-    .filterBtn { padding: 5px 14px; background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; cursor: pointer; transition: all .15s; letter-spacing: .5px; }
-    .filterBtn:hover, .filterBtn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.06); }
-    .grid { padding: 32px 48px 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
-    .card { background: var(--surface); border: 1px solid var(--border); padding: 28px; transition: border-color .2s, transform .15s; position: relative; }
-    .card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
+    .filterBtn { padding: 5px 14px; background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; cursor: pointer; transition: all .15s; border-radius: 20px; font-weight: 500; }
+    .filterBtn:hover { border-color: var(--gold); color: var(--gold); }
+    .filterBtn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-bg); }
+
+    .grid { padding: 28px 48px 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color .2s, box-shadow .2s; position: relative; }
+    .card:hover { border-color: #d4c8a8; box-shadow: var(--shadow-md); }
     .card.isNew { border-color: var(--gold); }
-    .newBadge { position: absolute; top: 16px; right: 16px; background: var(--gold); color: #000; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 8px; }
-    .cardCategory { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
-    .cardTitle { font-size: 16px; font-weight: 400; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-    .cardLocation { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
-    .cardLocation::before { content: ''; display: inline-block; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
-    .cardMetrics { display: flex; gap: 24px; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 16px; flex-wrap: wrap; }
-    .metric-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+    .newBadge { position: absolute; top: 14px; right: 14px; background: var(--gold); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 3px; }
+    .cardCategory { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; font-weight: 600; }
+    .cardTitle { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; line-height: 1.4; }
+    .cardLocation { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; }
+    .locDot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+    .cardMetrics { display: flex; gap: 20px; padding: 14px 0; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); margin-bottom: 14px; flex-wrap: wrap; }
+    .metric-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; font-weight: 600; }
     .metric-value { font-size: 15px; font-weight: 500; color: var(--text); }
     .metric-value.highlight { color: var(--gold); }
     .metric-value.green { color: var(--green); }
-    .cardDetails { list-style: none; margin-bottom: 16px; }
+    .cardDetails { list-style: none; margin-bottom: 14px; }
     .cardDetails li { font-size: 12px; color: var(--text-muted); padding: 3px 0 3px 14px; position: relative; line-height: 1.5; }
     .cardDetails li::before { content: '–'; position: absolute; left: 0; color: var(--text-dim); }
-    .cardTags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .tag { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); padding: 3px 8px; border: 1px solid var(--border); }
-    .cardDate { font-size: 10px; color: var(--text-dim); margin-top: 14px; letter-spacing: .5px; }
-    footer { border-top: 1px solid var(--border); padding: 20px 48px; font-size: 10px; color: var(--text-dim); text-align: center; }
+    .cardTags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .tag { font-size: 10px; color: var(--text-muted); padding: 2px 9px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); }
+    .cardDate { font-size: 10px; color: var(--text-dim); margin-top: 12px; }
+
+    footer { border-top: 1px solid var(--border); padding: 20px 48px; font-size: 10px; color: var(--text-dim); text-align: center; background: var(--surface); }
+
+    /* ── ADMIN PANEL ─────────────────────────────────────────────── */
+    #adminPanel { display: none; position: fixed; inset: 0; z-index: 200; }
+    .adminOverlay { position: absolute; inset: 0; background: rgba(0,0,0,.3); backdrop-filter: blur(2px); }
+    .adminDrawer { position: absolute; right: 0; top: 0; bottom: 0; width: 580px; background: var(--surface); box-shadow: -4px 0 24px rgba(0,0,0,.12); display: flex; flex-direction: column; overflow: hidden; }
+    .adminHeader { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .adminHeaderTitle { font-size: 14px; font-weight: 600; color: var(--text); }
+    .adminHeaderSub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .adminClose { background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: 20px; line-height: 1; padding: 4px; transition: color .15s; }
+    .adminClose:hover { color: var(--text); }
+    .adminTabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; padding: 0 28px; }
+    .adminTab { padding: 12px 16px; font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; margin-bottom: -1px; }
+    .adminTab:hover { color: var(--text); }
+    .adminTab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .adminBody { flex: 1; overflow-y: auto; padding: 24px 28px; }
+
+    /* Form */
+    .adminSection { display: none; }
+    .adminSection.active { display: block; }
+    .formMode { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .formMode.modeAdd { background: var(--green-bg); color: var(--green); border: 1px solid #b8dcc8; display: none; }
+    .formMode.modeEdit { background: var(--blue-bg); color: var(--blue); border: 1px solid #b8d0ea; display: none; }
+    .formMode.visible { display: flex; }
+    .formModeCancelBtn { margin-left: auto; background: none; border: none; cursor: pointer; color: inherit; font-size: 13px; opacity: .7; }
+    .formModeCancelBtn:hover { opacity: 1; }
+    .formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .formGroup { display: flex; flex-direction: column; gap: 5px; }
+    .formGroup.full { grid-column: 1 / -1; }
+    .formLabel { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; }
+    .formInput, .formSelect, .formTextarea { width: 100%; padding: 9px 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; border-radius: 5px; transition: border-color .15s, box-shadow .15s; font-family: inherit; }
+    .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,150,62,.1); background: var(--surface); }
+    .formTextarea { resize: vertical; min-height: 80px; }
+    .formHint { font-size: 10px; color: var(--text-dim); }
+    .formDivider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border-light); margin: 4px 0; }
+    .formActions { display: flex; gap: 10px; margin-top: 20px; }
+    .btnPrimary { padding: 10px 20px; background: var(--gold); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer; border-radius: 5px; transition: background .15s; flex: 1; }
+    .btnPrimary:hover { background: var(--gold-light); }
+    .btnSecondary { padding: 10px 20px; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 500; border: 1px solid var(--border); cursor: pointer; border-radius: 5px; transition: all .15s; }
+    .btnSecondary:hover { border-color: var(--text-muted); color: var(--text); }
+    .formFeedback { padding: 10px 14px; border-radius: 5px; font-size: 12px; margin-top: 12px; display: none; }
+    .formFeedback.success { background: var(--green-bg); border: 1px solid #b8dcc8; color: var(--green); }
+    .formFeedback.error { background: #fdf0ee; border: 1px solid #e8c8c4; color: var(--red); }
+
+    /* Asset list */
+    .adminListHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .adminListTitle { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; }
+    .adminSearchInput { padding: 7px 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; font-size: 12px; color: var(--text); outline: none; width: 160px; }
+    .adminSearchInput:focus { border-color: var(--gold); }
+    .adminAssetList { display: flex; flex-direction: column; gap: 6px; }
+    .adminAssetItem { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+    .adminAssetItem.isCustom { border-color: #ddd3b0; background: var(--gold-bg); }
+    .adminAssetItem.isOverridden { border-color: #b8d0ea; background: var(--blue-bg); }
+    .adminAssetInfo { flex: 1; min-width: 0; }
+    .adminAssetTitle { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .adminAssetMeta { font-size: 11px; color: var(--text-muted); }
+    .adminAssetBtns { display: flex; gap: 6px; flex-shrink: 0; }
+    .adminAssetBadge { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
+    .adminAssetBadge.builtin { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); }
+    .adminAssetBadge.custom { background: var(--gold-bg); border: 1px solid #e8d9b4; color: var(--gold); }
+    .adminAssetBadge.overridden { background: var(--blue-bg); border: 1px solid #b8d0ea; color: var(--blue); }
+    .editBtn { padding: 5px 10px; background: transparent; border: 1px solid #b8d0ea; color: var(--blue); font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
+    .editBtn:hover { background: var(--blue-bg); }
+    .deleteBtn { padding: 5px 10px; background: transparent; border: 1px solid #e8c8c4; color: #c0392b; font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
+    .deleteBtn:hover { background: #fdf0ee; }
+    .resetBtn { padding: 5px 10px; background: transparent; border: 1px solid #e8c8c4; color: #c0392b; font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
+    .resetBtn:hover { background: #fdf0ee; }
+
+    .adminExport { margin-top: 20px; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
+    .adminExportText { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
+    .exportBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .exportBtn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; border-radius: 5px; cursor: pointer; transition: all .15s; font-weight: 500; }
+    .exportBtn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────── */
     @media (max-width: 768px) {
       header, .statsBar, .filterBar, .toolbarRow, .grid, .disclaimerBar, footer { padding-left: 20px; padding-right: 20px; }
       .grid { grid-template-columns: 1fr; }
+      .adminDrawer { width: 100%; }
+      .headerTitle { display: none; }
     }
   </style>
 </head>
 <body>
 
+<!-- ── LOGIN ──────────────────────────────────────────────────────── -->
 <div id="loginScreen">
   <div class="loginBox">
     <div class="loginLogo">SREAP</div>
     <div class="loginTitle">Asset Portfolio</div>
-    <div class="loginSub">Confidential — Authorised Access Only</div>
-    <input type="password" id="pwInput" placeholder="Enter access code" onkeydown="if(event.key==='Enter')checkPw()">
-    <button class="loginBtn" onclick="checkPw()">Access Portfolio</button>
+    <div class="loginSub">Vertraulich — Nur autorisierter Zugang</div>
+    <input type="password" id="pwInput" placeholder="Zugangscode eingeben" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="loginBtn" onclick="checkPw()">Portfolio öffnen</button>
     <div class="loginError" id="loginError"></div>
-    <div class="loginDisclaimer">This document is provided solely for informational purposes and does not constitute a binding offer or investment advice. Forwarding without prior written consent is strictly prohibited.</div>
+    <div class="loginDisclaimer">Dieses Dokument dient ausschliesslich zu Informationszwecken und stellt kein verbindliches Angebot oder eine Anlageberatung dar. Eine Weitergabe ohne vorherige schriftliche Zustimmung ist untersagt.</div>
   </div>
 </div>
 
+<!-- ── MAIN ───────────────────────────────────────────────────────── -->
 <div id="mainContent">
   <header>
-    <div class="headerLogo">SREAP · 2026</div>
-    <div class="headerTitle">Swiss Real Estate Asset Portfolio</div>
-    <button class="logoutBtn" onclick="logout()">Logout</button>
+    <div class="headerLeft">
+      <div class="headerLogo">SREAP · 2026</div>
+      <div class="headerTitle">Swiss Real Estate Asset Portfolio</div>
+    </div>
+    <div class="headerRight">
+      <button class="adminBtn" onclick="openAdmin()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Admin
+      </button>
+      <button class="logoutBtn" onclick="logout()">Logout</button>
+    </div>
   </header>
-  <div class="disclaimerBar">Confidential. For information purposes only. No binding offer. All information subject to change. Forwarding without prior written consent strictly prohibited.</div>
+
+  <div class="disclaimerBar">Vertraulich. Nur zu Informationszwecken. Kein verbindliches Angebot. Alle Angaben vorbehaltlich. Weitergabe nur mit vorheriger schriftlicher Zustimmung.</div>
   <div class="statsBar" id="statsBar"></div>
+
   <div class="toolbarRow">
-    <input class="searchInput" type="text" id="searchInput" placeholder="Suchen nach Ort, Kategorie, Tag…" oninput="renderCards()">
+    <div class="searchWrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="searchInput" type="text" id="searchInput" placeholder="Suchen nach Ort, Kategorie, Tag …" oninput="renderCards()">
+    </div>
     <span class="resultsCount" id="resultsCount"></span>
   </div>
+
   <div class="filterBar">
     <span class="filterLabel">Filter:</span>
     <button class="filterBtn active" onclick="setFilter('all',this)">Alle</button>
@@ -116,36 +231,151 @@
     <button class="filterBtn" onclick="setFilter('Portfolio',this)">Portfolio</button>
     <button class="filterBtn" onclick="setFilter('Commercial',this)">Commercial</button>
   </div>
+
   <div class="grid" id="cardGrid"></div>
-  <footer>Swiss Real Estate Asset Portfolio · 2026 · Confidential</footer>
+  <footer>Swiss Real Estate Asset Portfolio · 2026 · Vertraulich</footer>
+</div>
+
+<!-- ── ADMIN PANEL ─────────────────────────────────────────────────── -->
+<div id="adminPanel">
+  <div class="adminOverlay" onclick="closeAdmin()"></div>
+  <div class="adminDrawer">
+    <div class="adminHeader">
+      <div>
+        <div class="adminHeaderTitle">Admin-Konsole</div>
+        <div class="adminHeaderSub">Assets verwalten, bearbeiten &amp; hinzufügen</div>
+      </div>
+      <button class="adminClose" onclick="closeAdmin()">×</button>
+    </div>
+    <div class="adminTabs">
+      <div class="adminTab active" id="tabBtnAdd" onclick="switchTab('add',this)">Asset erfassen</div>
+      <div class="adminTab" id="tabBtnList" onclick="switchTab('list',this)">Alle Assets</div>
+    </div>
+    <div class="adminBody">
+
+      <!-- ── TAB: ASSET ERFASSEN / BEARBEITEN ──────────────── -->
+      <div class="adminSection active" id="tabAdd">
+        <div class="formMode modeAdd" id="formModeAdd">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Neues Asset hinzufügen
+        </div>
+        <div class="formMode modeEdit" id="formModeEdit">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span id="formModeEditLabel">Bearbeite Asset</span>
+          <button class="formModeCancelBtn" onclick="resetForm()" title="Abbrechen">✕</button>
+        </div>
+
+        <div class="formGrid">
+          <div class="formGroup">
+            <label class="formLabel">Asset-ID *</label>
+            <input class="formInput" id="fId" type="text" placeholder="z.B. ZRH-001">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Datum hinzugefügt</label>
+            <input class="formInput" id="fDate" type="date">
+          </div>
+          <div class="formGroup full">
+            <label class="formLabel">Titel *</label>
+            <input class="formInput" id="fTitle" type="text" placeholder="z.B. Zürich – Mixed-Use Liegenschaft">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Ort *</label>
+            <input class="formInput" id="fLocation" type="text" placeholder="z.B. Zürich, Switzerland">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Kategorie *</label>
+            <select class="formSelect" id="fCategory">
+              <option value="">– wählen –</option>
+              <option value="Mixed-Use">Mixed-Use</option>
+              <option value="Residential">Residential</option>
+              <option value="Development">Development</option>
+              <option value="Portfolio">Portfolio</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </div>
+
+          <hr class="formDivider">
+
+          <div class="formGroup">
+            <label class="formLabel">Kaufpreis (CHF)</label>
+            <input class="formInput" id="fSalePrice" type="number" placeholder="z.B. 12500000">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Investitionsvolumen (CHF)</label>
+            <input class="formInput" id="fInvestVol" type="number" placeholder="z.B. 15000000">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Netto-Rendite (%)</label>
+            <input class="formInput" id="fYield" type="number" step="0.01" placeholder="z.B. 4.50">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Brutto-Rendite (%)</label>
+            <input class="formInput" id="fGrossYield" type="number" step="0.01" placeholder="z.B. 5.10">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Nettomiete / Jahr (CHF)</label>
+            <input class="formInput" id="fNetRental" type="number" placeholder="z.B. 480000">
+          </div>
+          <div class="formGroup">
+            <label class="formLabel">Jahresmiete (CHF)</label>
+            <input class="formInput" id="fAnnualRent" type="number" placeholder="z.B. 520000">
+          </div>
+
+          <hr class="formDivider">
+
+          <div class="formGroup full">
+            <label class="formLabel">Details (eine pro Zeile)</label>
+            <textarea class="formTextarea" id="fDetails" placeholder="z.B.&#10;12 Wohneinheiten&#10;2 Gewerbeflächen&#10;Tiefgarage"></textarea>
+            <span class="formHint">Jede Zeile wird als eigener Bullet angezeigt</span>
+          </div>
+          <div class="formGroup full">
+            <label class="formLabel">Tags (kommagetrennt)</label>
+            <input class="formInput" id="fTags" type="text" placeholder="z.B. Zürich, Mixed-Use, Value-Add">
+          </div>
+        </div>
+
+        <div class="formActions">
+          <button class="btnSecondary" onclick="resetForm()">Zurücksetzen</button>
+          <button class="btnPrimary" id="formSaveBtn" onclick="saveAsset()">Asset hinzufügen</button>
+        </div>
+        <div class="formFeedback success" id="formSuccess"></div>
+        <div class="formFeedback error" id="formError"></div>
+      </div>
+
+      <!-- ── TAB: ALLE ASSETS ──────────────────────────────── -->
+      <div class="adminSection" id="tabList">
+        <div class="adminListHeader">
+          <div class="adminListTitle">Assets (<span id="adminAssetCount">0</span>)</div>
+          <input class="adminSearchInput" type="text" placeholder="Suchen …" oninput="renderAdminList(this.value)">
+        </div>
+        <div id="adminAssetList" class="adminAssetList"></div>
+        <div class="adminExport">
+          <div class="adminExportText">Änderungen als JSON exportieren. <strong>Neue Assets</strong> exportieren und in <code>assets.json</code> einfügen; <strong>Bearbeitungen</strong> exportieren zeigt alle überschriebenen Felder.</div>
+          <div class="exportBtns">
+            <button class="exportBtn" onclick="exportCustomJSON()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Neue Assets exportieren
+            </button>
+            <button class="exportBtn" onclick="exportOverridesJSON()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Bearbeitungen exportieren
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
-  // ── PASSWORT ────────────────────────────────────────────────────────────────
-  // Zum Ändern: diesen Wert ersetzen und Datei speichern
-  const ACCESS_CODE = 'SREAP2026';
+// ── CONFIG ──────────────────────────────────────────────────────────
+const ACCESS_CODE    = 'SREAP2026';
+const CUSTOM_KEY     = 'sreap_custom_assets';
+const OVERRIDES_KEY  = 'sreap_asset_overrides';  // {id: {field: val, ...}}
 
-  function checkPw() {
-    if (document.getElementById('pwInput').value === ACCESS_CODE) {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-      init();
-    } else {
-      document.getElementById('loginError').textContent = 'Incorrect access code.';
-      document.getElementById('pwInput').value = '';
-    }
-  }
-  function logout() {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('pwInput').value = '';
-    document.getElementById('loginError').textContent = '';
-  }
-
-  // ── ASSET-DATEN ─────────────────────────────────────────────────────────────
-  // Neues Asset hinzufügen: Eintrag OBEN in dieses Array kopieren,
-  // "dateAdded" auf das heutige Datum setzen → erscheint automatisch zuerst mit "NEU"-Badge.
-  const ASSETS_DATA = [
+// ── BUILTIN DATA ─────────────────────────────────────────────────────
+const BUILTIN_ASSETS = [
   {"id":"NRW-001","dateAdded":"2026-06-04","title":"Portfolio NRW, Rhein-Ruhr Region (Germany)","location":"Nordrhein-Westfalen, Germany","category":"Portfolio","investmentVolume":42000000,"currency":"CHF","yield":4.8,"details":["23 Assets","Mixed-use portfolio","Rhein-Ruhr Region"],"tags":["Portfolio","Deutschland","Mixed-Use"]},
   {"id":"GVA-004","dateAdded":"2026-05-29","title":"Geneva – Commercial & Residential Mixed-Use Asset","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":23000000,"currency":"CHF","yield":3.65,"details":["7 office units","5 apartments","5 storage units","1 retail space","Underground parking with 10 spaces","Additional optimization/development potential"],"tags":["Genf","Büro","Residential"]},
   {"id":"SIO-001","dateAdded":"2026-05-29","title":"Sion (Valais) – Large Mixed-Use Asset","location":"Sion, Valais","category":"Mixed-Use","salePrice":40000000,"currency":"CHF","yield":5.0,"details":["39 apartments","3 commercial units","Lease negotiations in progress with Migros, Denner, and additional tenants"],"tags":["Wallis","Mixed-Use","Value-Add"]},
@@ -164,95 +394,364 @@
   {"id":"NEU-001","dateAdded":"2026-05-29","title":"Neuveville – Residential Building","location":"Neuveville, Bern","category":"Residential","investmentVolume":5200000,"currency":"CHF","details":["10 apartments","Located near Lake Biel and train station","Stable in-place income","Value-add potential through extension and rental reversion strategies"],"tags":["Bern","Residential","Value-Add"]},
   {"id":"COL-001","dateAdded":"2026-05-29","title":"Collombey (Wallis) – Medical Clinic","location":"Collombey, Valais","category":"Commercial","salePrice":7500000,"currency":"CHF","yield":2.46,"yieldPotential":4.84,"details":["Medical clinic asset","Current Yield: 2.46%","Potential Yield: 4.84%","Value-add potential"],"tags":["Wallis","Klinik","Value-Add"]},
   {"id":"GVA-001","dateAdded":"2026-05-29","title":"Geneva – Residential & Commercial Building","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":10800000,"currency":"CHF","yield":2.62,"grossYield":3.37,"grossIncome":364299,"operatingExpenses":81794,"netRentalIncome":282505,"landArea":139,"livingArea":670,"commercialArea":140,"totalArea":810,"pricePerSqm":13333,"marketPriceRange":"14'000–17'000","details":["9 residential units + 1 commercial unit","Land Area: 139 m²","Total Area: ≈ 810 m²","Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"],"tags":["Genf","Residential","Commercial"]}
-  ];
+];
 
-  // ── LOGIK ────────────────────────────────────────────────────────────────────
-  let allAssets = [];
-  let activeFilter = 'all';
+// ── STATE ────────────────────────────────────────────────────────────
+let allAssets   = [];
+let activeFilter = 'all';
+let editMode     = false;  // false = new asset, string = id being edited
 
-  function loadAssets() {
-    allAssets = ASSETS_DATA;
-    allAssets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+// ── AUTH ─────────────────────────────────────────────────────────────
+function checkPw() {
+  if (document.getElementById('pwInput').value === ACCESS_CODE) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('loginError').textContent = 'Falscher Zugangscode.';
+    document.getElementById('pwInput').value = '';
+  }
+}
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginError').textContent = '';
+}
+
+// ── STORAGE ──────────────────────────────────────────────────────────
+function getCustomAssets() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_KEY) || '[]'); } catch { return []; }
+}
+function saveCustomAssets(arr) { localStorage.setItem(CUSTOM_KEY, JSON.stringify(arr)); }
+
+function getOverrides() {
+  try { return JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}'); } catch { return {}; }
+}
+function saveOverrides(obj) { localStorage.setItem(OVERRIDES_KEY, JSON.stringify(obj)); }
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function isNew(dateStr) { return (new Date() - new Date(dateStr)) < 7 * 24 * 60 * 60 * 1000; }
+function formatCHF(n) {
+  if (!n) return '–';
+  if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + ' Mio.';
+  return 'CHF ' + n.toLocaleString('de-CH');
+}
+function formatYield(y) { return (y || y === 0) ? y.toFixed(2) + '%' : null; }
+
+// ── LOAD ──────────────────────────────────────────────────────────────
+function loadAssets() {
+  const custom    = getCustomAssets();
+  const overrides = getOverrides();
+  // Apply overrides to builtins
+  const builtins = BUILTIN_ASSETS.map(a => overrides[a.id] ? {...a, ...overrides[a.id], _overridden: true} : a);
+  allAssets = [...custom, ...builtins];
+  allAssets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────
+function renderStats() {
+  const total  = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
+  const yields = allAssets.filter(a => a.yield).map(a => a.yield);
+  const avgY   = yields.length ? yields.reduce((s,y) => s+y,0)/yields.length : 0;
+  const newCount = allAssets.filter(a => isNew(a.dateAdded)).length;
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Liegenschaften</div></div>
+    <div class="stat"><div class="stat-label">Gesamtvolumen</div><div class="stat-value gold">${formatCHF(total)}</div><div class="stat-sub">Investitionsvolumen</div></div>
+    <div class="stat"><div class="stat-label">Ø Rendite</div><div class="stat-value">${avgY.toFixed(2)}%</div><div class="stat-sub">Netto-Rendite Ø</div></div>
+    ${newCount > 0 ? `<div class="stat"><div class="stat-label">Neu</div><div class="stat-value gold">${newCount}</div><div class="stat-sub">Diese Woche</div></div>` : ''}
+  `;
+}
+
+// ── FILTER / SEARCH ───────────────────────────────────────────────────
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filterBtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return allAssets.filter(a => {
+    const matchCat = activeFilter === 'all' || a.category === activeFilter;
+    if (!q) return matchCat;
+    const hay = [a.title, a.location, a.category, ...(a.tags||[]), ...(a.details||[])].join(' ').toLowerCase();
+    return matchCat && hay.includes(q);
+  });
+}
+
+// ── CARDS ─────────────────────────────────────────────────────────────
+function renderCards() {
+  const filtered = getFiltered();
+  document.getElementById('resultsCount').textContent = `${filtered.length} Objekt${filtered.length !== 1 ? 'e' : ''}`;
+  document.getElementById('cardGrid').innerHTML = filtered.map(a => {
+    const price = a.salePrice || a.investmentVolume;
+    const yld   = a.yield || a.grossYield;
+    const novel = isNew(a.dateAdded);
+    const metrics = [
+      price ? `<div class="metric"><div class="metric-label">${a.salePrice?'Kaufpreis':'Volumen'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
+      yld   ? `<div class="metric"><div class="metric-label">Rendite</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
+      a.yieldPotential  ? `<div class="metric"><div class="metric-label">Pot. Rendite</div><div class="metric-value">${formatYield(a.yieldPotential)}</div></div>` : '',
+      a.netRentalIncome ? `<div class="metric"><div class="metric-label">Nettomiete/J.</div><div class="metric-value">${formatCHF(a.netRentalIncome)}</div></div>` : '',
+      a.annualRentalIncome ? `<div class="metric"><div class="metric-label">Jahresmiete</div><div class="metric-value">${formatCHF(a.annualRentalIncome)}</div></div>` : '',
+    ].filter(Boolean).join('');
+    const dateStr = new Date(a.dateAdded).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
+    return `
+      <div class="card${novel?' isNew':''}">
+        ${novel?'<div class="newBadge">Neu</div>':''}
+        <div class="cardCategory">${a.category}</div>
+        <div class="cardTitle">${a.title}</div>
+        <div class="cardLocation"><span class="locDot"></span>${a.location}</div>
+        <div class="cardMetrics">${metrics}</div>
+        ${a.details?.length ? `<ul class="cardDetails">${a.details.map(d=>`<li>${d}</li>`).join('')}</ul>` : ''}
+        ${a.tags?.length ? `<div class="cardTags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+        <div class="cardDate">Hinzugefügt: ${dateStr} · ID: ${a.id}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────────────
+function openAdmin() {
+  document.getElementById('adminPanel').style.display = 'block';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  renderAdminList('');
+}
+function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.adminTab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.adminSection').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  const tabId = 'tab' + name.charAt(0).toUpperCase() + name.slice(1);
+  document.getElementById(tabId).classList.add('active');
+  if (name === 'list') renderAdminList('');
+}
+
+// ── FORM LOGIC ────────────────────────────────────────────────────────
+function populateForm(asset) {
+  document.getElementById('fId').value          = asset.id || '';
+  document.getElementById('fDate').value        = asset.dateAdded || new Date().toISOString().split('T')[0];
+  document.getElementById('fTitle').value       = asset.title || '';
+  document.getElementById('fLocation').value    = asset.location || '';
+  document.getElementById('fCategory').value    = asset.category || '';
+  document.getElementById('fSalePrice').value   = asset.salePrice != null ? asset.salePrice : '';
+  document.getElementById('fInvestVol').value   = asset.investmentVolume != null ? asset.investmentVolume : '';
+  document.getElementById('fYield').value       = asset.yield != null ? asset.yield : '';
+  document.getElementById('fGrossYield').value  = asset.grossYield != null ? asset.grossYield : '';
+  document.getElementById('fNetRental').value   = asset.netRentalIncome != null ? asset.netRentalIncome : '';
+  document.getElementById('fAnnualRent').value  = asset.annualRentalIncome != null ? asset.annualRentalIncome : '';
+  document.getElementById('fDetails').value     = (asset.details||[]).join('\n');
+  document.getElementById('fTags').value        = (asset.tags||[]).join(', ');
+}
+
+function setFormMode(mode) {
+  // mode: 'new' | 'edit'
+  const modeAdd  = document.getElementById('formModeAdd');
+  const modeEdit = document.getElementById('formModeEdit');
+  const saveBtn  = document.getElementById('formSaveBtn');
+  const idInput  = document.getElementById('fId');
+  modeAdd.classList.toggle('visible',  mode === 'new');
+  modeEdit.classList.toggle('visible', mode === 'edit');
+  saveBtn.textContent = mode === 'edit' ? 'Änderungen speichern' : 'Asset hinzufügen';
+  idInput.readOnly    = mode === 'edit';
+  idInput.style.opacity = mode === 'edit' ? '.6' : '1';
+}
+
+function editAsset(id) {
+  // Find asset (merged with overrides)
+  const asset = allAssets.find(a => a.id === id);
+  if (!asset) return;
+  editMode = id;
+  populateForm(asset);
+  setFormMode('edit');
+  document.getElementById('formModeEditLabel').textContent = `Bearbeite: ${id}`;
+  // switch to add tab
+  document.querySelectorAll('.adminTab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.adminSection').forEach(s => s.classList.remove('active'));
+  document.getElementById('tabBtnAdd').classList.add('active');
+  document.getElementById('tabAdd').classList.add('active');
+  hideFeedback();
+  document.getElementById('adminPanel').querySelector('.adminBody').scrollTop = 0;
+}
+
+function resetForm() {
+  editMode = false;
+  ['fId','fTitle','fLocation','fSalePrice','fInvestVol','fYield','fGrossYield','fNetRental','fAnnualRent','fDetails','fTags'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fCategory').value = '';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fId').readOnly = false;
+  document.getElementById('fId').style.opacity = '1';
+  setFormMode('new');
+  hideFeedback();
+}
+
+function hideFeedback() {
+  document.getElementById('formSuccess').style.display = 'none';
+  document.getElementById('formError').style.display = 'none';
+}
+
+function showFeedback(type, msg) {
+  const el = document.getElementById(type === 'success' ? 'formSuccess' : 'formError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  if (type === 'success') setTimeout(() => el.style.display = 'none', 3500);
+}
+
+function buildAssetFromForm() {
+  const id       = document.getElementById('fId').value.trim();
+  const title    = document.getElementById('fTitle').value.trim();
+  const location = document.getElementById('fLocation').value.trim();
+  const category = document.getElementById('fCategory').value;
+  if (!id || !title || !location || !category) return null;
+
+  const obj = { id, title, location, category, currency: 'CHF',
+    dateAdded: document.getElementById('fDate').value || new Date().toISOString().split('T')[0] };
+
+  const sp = parseFloat(document.getElementById('fSalePrice').value);
+  const iv = parseFloat(document.getElementById('fInvestVol').value);
+  const y  = parseFloat(document.getElementById('fYield').value);
+  const gy = parseFloat(document.getElementById('fGrossYield').value);
+  const nr = parseFloat(document.getElementById('fNetRental').value);
+  const ar = parseFloat(document.getElementById('fAnnualRent').value);
+  if (!isNaN(sp)) obj.salePrice = sp;
+  if (!isNaN(iv)) obj.investmentVolume = iv;
+  if (!isNaN(y))  obj.yield = y;
+  if (!isNaN(gy)) obj.grossYield = gy;
+  if (!isNaN(nr)) obj.netRentalIncome = nr;
+  if (!isNaN(ar)) obj.annualRentalIncome = ar;
+
+  const det = document.getElementById('fDetails').value.trim();
+  const tgs = document.getElementById('fTags').value.trim();
+  if (det) obj.details = det.split('\n').map(s => s.trim()).filter(Boolean);
+  if (tgs) obj.tags    = tgs.split(',').map(s => s.trim()).filter(Boolean);
+  return obj;
+}
+
+function saveAsset() {
+  hideFeedback();
+  const obj = buildAssetFromForm();
+  if (!obj) { showFeedback('error', 'Bitte alle Pflichtfelder ausfüllen (ID, Titel, Ort, Kategorie).'); return; }
+
+  const isBuiltin = BUILTIN_ASSETS.some(a => a.id === obj.id);
+  const custom    = getCustomAssets();
+  const overrides = getOverrides();
+
+  if (editMode) {
+    // EDIT MODE
+    if (isBuiltin) {
+      // Store changed fields as override (all writable fields)
+      const {id, ...rest} = obj;
+      overrides[id] = rest;
+      saveOverrides(overrides);
+    } else {
+      // Update in custom array
+      const idx = custom.findIndex(a => a.id === obj.id);
+      if (idx >= 0) { const {_custom, ...rest} = custom[idx]; custom[idx] = {...rest, ...obj, _custom: true}; }
+      saveCustomAssets(custom);
+    }
+    showFeedback('success', `✓ Asset «${obj.id}» erfolgreich aktualisiert.`);
+  } else {
+    // NEW ASSET MODE
+    const allIds = [...custom.map(a=>a.id), ...BUILTIN_ASSETS.map(a=>a.id)];
+    if (allIds.includes(obj.id)) { showFeedback('error', `ID «${obj.id}» existiert bereits. Bitte eine andere ID wählen.`); return; }
+    obj._custom = true;
+    custom.unshift(obj);
+    saveCustomAssets(custom);
+    showFeedback('success', `✓ Asset «${obj.id}» erfolgreich hinzugefügt.`);
+    resetForm();
   }
 
-  function isNew(dateStr) {
-    return (new Date() - new Date(dateStr)) < 7 * 24 * 60 * 60 * 1000;
-  }
+  loadAssets();
+  renderStats();
+  renderCards();
+}
 
-  function formatCHF(n) {
-    if (!n) return '–';
-    if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + ' Mio.';
-    return 'CHF ' + n.toLocaleString('de-CH');
+// ── ADMIN LIST ────────────────────────────────────────────────────────
+function deleteAsset(id) {
+  const isBuiltin = BUILTIN_ASSETS.some(a => a.id === id);
+  if (isBuiltin) {
+    if (!confirm(`«${id}» ist ein Standard-Asset. Sollen die Bearbeitungen zurückgesetzt werden?`)) return;
+    const ov = getOverrides();
+    delete ov[id];
+    saveOverrides(ov);
+  } else {
+    if (!confirm(`Asset «${id}» wirklich löschen?`)) return;
+    saveCustomAssets(getCustomAssets().filter(a => a.id !== id));
   }
+  loadAssets();
+  renderStats();
+  renderCards();
+  renderAdminList('');
+}
 
-  function formatYield(y) {
-    return (y || y === 0) ? y.toFixed(2) + '%' : null;
-  }
+function renderAdminList(query) {
+  const q         = (query || '').toLowerCase();
+  const customIds  = new Set(getCustomAssets().map(a => a.id));
+  const overrideIds = new Set(Object.keys(getOverrides()));
 
-  function renderStats() {
-    const total = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
-    const yields = allAssets.filter(a => a.yield).map(a => a.yield);
-    const avgY = yields.length ? (yields.reduce((s,y) => s+y,0)/yields.length) : 0;
-    const newCount = allAssets.filter(a => isNew(a.dateAdded)).length;
-    document.getElementById('statsBar').innerHTML = `
-      <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Liegenschaften</div></div>
-      <div class="stat"><div class="stat-label">Gesamtvolumen</div><div class="stat-value">${formatCHF(total)}</div><div class="stat-sub">Investitionsvolumen</div></div>
-      <div class="stat"><div class="stat-label">Ø Rendite</div><div class="stat-value">${avgY.toFixed(2)}%</div><div class="stat-sub">Netto-Rendite Ø</div></div>
-      ${newCount > 0 ? `<div class="stat"><div class="stat-label">Neu</div><div class="stat-value" style="color:var(--gold)">${newCount}</div><div class="stat-sub">Diese Woche hinzugefügt</div></div>` : ''}
-    `;
-  }
+  const visible = allAssets.filter(a => {
+    if (!q) return true;
+    return (a.title + a.id + a.location).toLowerCase().includes(q);
+  });
 
-  function setFilter(cat, btn) {
-    activeFilter = cat;
-    document.querySelectorAll('.filterBtn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderCards();
-  }
+  document.getElementById('adminAssetCount').textContent = allAssets.length;
+  document.getElementById('adminAssetList').innerHTML = visible.map(a => {
+    const isCustom     = customIds.has(a.id);
+    const isOverridden = !isCustom && overrideIds.has(a.id);
+    const price = a.salePrice || a.investmentVolume;
+    let badge = '';
+    if (isCustom)     badge = '<span class="adminAssetBadge custom">Neu</span>';
+    else if (isOverridden) badge = '<span class="adminAssetBadge overridden">Bearbeitet</span>';
+    else              badge = '<span class="adminAssetBadge builtin">Standard</span>';
 
-  function getFiltered() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    return allAssets.filter(a => {
-      const matchCat = activeFilter === 'all' || a.category === activeFilter;
-      if (!q) return matchCat;
-      const hay = [a.title, a.location, a.category, ...(a.tags||[]), ...(a.details||[])].join(' ').toLowerCase();
-      return matchCat && hay.includes(q);
-    });
-  }
+    const deleteLbl = isCustom ? 'Löschen' : (isOverridden ? 'Zurücksetzen' : '');
+    const deleteCls = isCustom ? 'deleteBtn' : 'resetBtn';
 
-  function renderCards() {
-    const filtered = getFiltered();
-    document.getElementById('resultsCount').textContent = `${filtered.length} Objekt${filtered.length !== 1 ? 'e' : ''}`;
-    document.getElementById('cardGrid').innerHTML = filtered.map(a => {
-      const price = a.salePrice || a.investmentVolume;
-      const yld = a.yield || a.grossYield;
-      const novel = isNew(a.dateAdded);
-      const metrics = [
-        price ? `<div class="metric"><div class="metric-label">${a.salePrice?'Kaufpreis':'Volumen'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
-        yld ? `<div class="metric"><div class="metric-label">Rendite</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
-        a.yieldPotential ? `<div class="metric"><div class="metric-label">Pot. Rendite</div><div class="metric-value">${formatYield(a.yieldPotential)}</div></div>` : '',
-        a.netRentalIncome ? `<div class="metric"><div class="metric-label">Nettomiete/J.</div><div class="metric-value">${formatCHF(a.netRentalIncome)}</div></div>` : '',
-        a.annualRentalIncome ? `<div class="metric"><div class="metric-label">Jahresmiete</div><div class="metric-value">${formatCHF(a.annualRentalIncome)}</div></div>` : '',
-      ].filter(Boolean).join('');
-      const dateStr = new Date(a.dateAdded).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
-      return `
-        <div class="card${novel?' isNew':''}">
-          ${novel?'<div class="newBadge">Neu</div>':''}
-          <div class="cardCategory">${a.category}</div>
-          <div class="cardTitle">${a.title}</div>
-          <div class="cardLocation">${a.location}</div>
-          <div class="cardMetrics">${metrics}</div>
-          ${a.details?.length ? `<ul class="cardDetails">${a.details.map(d=>`<li>${d}</li>`).join('')}</ul>` : ''}
-          ${a.tags?.length ? `<div class="cardTags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
-          <div class="cardDate">Hinzugefügt: ${dateStr} · ID: ${a.id}</div>
-        </div>`;
-    }).join('');
-  }
+    return `
+      <div class="adminAssetItem${isCustom?' isCustom':''}${isOverridden?' isOverridden':''}">
+        <div class="adminAssetInfo">
+          <div class="adminAssetTitle">${a.title}</div>
+          <div class="adminAssetMeta">${a.id} · ${a.category}${price ? ' · ' + formatCHF(price) : ''}</div>
+        </div>
+        ${badge}
+        <div class="adminAssetBtns">
+          <button class="editBtn" onclick="editAsset('${a.id}')">Bearbeiten</button>
+          ${(isCustom || isOverridden) ? `<button class="${deleteCls}" onclick="deleteAsset('${a.id}')">${deleteLbl}</button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
 
-  function init() {
-    loadAssets();
-    renderStats();
-    renderCards();
-  }
+// ── EXPORT ────────────────────────────────────────────────────────────
+function exportCustomJSON() {
+  const custom = getCustomAssets();
+  if (!custom.length) { alert('Keine neuen Assets vorhanden.'); return; }
+  const clean = custom.map(({_custom, ...rest}) => rest);
+  downloadJSON(clean, 'sreap_neue_assets.json');
+}
+function exportOverridesJSON() {
+  const ov = getOverrides();
+  if (!Object.keys(ov).length) { alert('Keine Bearbeitungen vorhanden.'); return; }
+  downloadJSON(ov, 'sreap_bearbeitungen.json');
+}
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+function init() {
+  loadAssets();
+  renderStats();
+  renderCards();
+  // Set initial form mode indicator (hidden until admin opens)
+  setFormMode('new');
+}
 </script>
 </body>
 </html>
