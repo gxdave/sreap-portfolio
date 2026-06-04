@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SREAP – Swiss Real Estate Asset Portfolio</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #151515;
+      --surface2: #1c1c1c;
+      --border: #2a2a2a;
+      --gold: #c9a84c;
+      --gold-light: #e2c17a;
+      --text: #e8e8e8;
+      --text-muted: #888;
+      --text-dim: #555;
+      --green: #4caf84;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; min-height: 100vh; }
+
+    /* LOGIN */
+    #loginScreen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .loginBox { width: 360px; padding: 48px 40px; border: 1px solid var(--border); background: var(--surface); text-align: center; }
+    .loginLogo { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+    .loginTitle { font-size: 22px; font-weight: 300; color: var(--text); margin-bottom: 6px; }
+    .loginSub { font-size: 12px; color: var(--text-muted); margin-bottom: 36px; }
+    .loginBox input[type="password"] { width: 100%; padding: 12px 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 15px; outline: none; transition: border-color .2s; margin-bottom: 12px; }
+    .loginBox input[type="password"]:focus { border-color: var(--gold); }
+    .loginBtn { width: 100%; padding: 12px; background: var(--gold); color: #000; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; cursor: pointer; transition: background .2s; }
+    .loginBtn:hover { background: var(--gold-light); }
+    .loginError { color: #e55; font-size: 12px; margin-top: 10px; height: 16px; }
+    .loginDisclaimer { margin-top: 28px; font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+
+    /* MAIN */
+    #mainContent { display: none; }
+    header { border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; background: var(--bg); z-index: 10; }
+    .headerLogo { font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; }
+    .headerTitle { font-size: 13px; font-weight: 300; color: var(--text-muted); }
+    .logoutBtn { font-size: 11px; color: var(--text-dim); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; background: none; border: none; transition: color .2s; }
+    .logoutBtn:hover { color: var(--text-muted); }
+    .disclaimerBar { background: #111; border-bottom: 1px solid var(--border); padding: 10px 48px; font-size: 10.5px; color: var(--text-dim); line-height: 1.5; }
+    .statsBar { padding: 20px 48px; display: flex; gap: 48px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+    .stat-value { font-size: 20px; font-weight: 300; color: var(--gold); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .toolbarRow { padding: 16px 48px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .searchInput { width: 280px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 13px; outline: none; transition: border-color .2s; }
+    .searchInput:focus { border-color: var(--gold); }
+    .searchInput::placeholder { color: var(--text-dim); }
+    .resultsCount { font-size: 11px; color: var(--text-dim); letter-spacing: .5px; }
+    .filterBar { padding: 16px 48px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filterLabel { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-right: 8px; }
+    .filterBtn { padding: 5px 14px; background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; cursor: pointer; transition: all .15s; letter-spacing: .5px; }
+    .filterBtn:hover, .filterBtn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.06); }
+    .grid { padding: 32px 48px 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); padding: 28px; transition: border-color .2s, transform .15s; position: relative; }
+    .card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
+    .card.isNew { border-color: var(--gold); }
+    .newBadge { position: absolute; top: 16px; right: 16px; background: var(--gold); color: #000; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 8px; }
+    .cardCategory { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+    .cardTitle { font-size: 16px; font-weight: 400; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+    .cardLocation { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
+    .cardLocation::before { content: ''; display: inline-block; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+    .cardMetrics { display: flex; gap: 24px; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 16px; flex-wrap: wrap; }
+    .metric-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+    .metric-value { font-size: 15px; font-weight: 500; color: var(--text); }
+    .metric-value.highlight { color: var(--gold); }
+    .metric-value.green { color: var(--green); }
+    .cardDetails { list-style: none; margin-bottom: 16px; }
+    .cardDetails li { font-size: 12px; color: var(--text-muted); padding: 3px 0 3px 14px; position: relative; line-height: 1.5; }
+    .cardDetails li::before { content: '–'; position: absolute; left: 0; color: var(--text-dim); }
+    .cardTags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); padding: 3px 8px; border: 1px solid var(--border); }
+    .cardDate { font-size: 10px; color: var(--text-dim); margin-top: 14px; letter-spacing: .5px; }
+    footer { border-top: 1px solid var(--border); padding: 20px 48px; font-size: 10px; color: var(--text-dim); text-align: center; }
+    @media (max-width: 768px) {
+      header, .statsBar, .filterBar, .toolbarRow, .grid, .disclaimerBar, footer { padding-left: 20px; padding-right: 20px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="loginBox">
+    <div class="loginLogo">SREAP</div>
+    <div class="loginTitle">Asset Portfolio</div>
+    <div class="loginSub">Confidential — Authorised Access Only</div>
+    <input type="password" id="pwInput" placeholder="Enter access code" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="loginBtn" onclick="checkPw()">Access Portfolio</button>
+    <div class="loginError" id="loginError"></div>
+    <div class="loginDisclaimer">This document is provided solely for informational purposes and does not constitute a binding offer or investment advice. Forwarding without prior written consent is strictly prohibited.</div>
+  </div>
+</div>
+
+<div id="mainContent">
+  <header>
+    <div class="headerLogo">SREAP · 2026</div>
+    <div class="headerTitle">Swiss Real Estate Asset Portfolio</div>
+    <button class="logoutBtn" onclick="logout()">Logout</button>
+  </header>
+  <div class="disclaimerBar">Confidential. For information purposes only. No binding offer. All information subject to change. Forwarding without prior written consent strictly prohibited.</div>
+  <div class="statsBar" id="statsBar"></div>
+  <div class="toolbarRow">
+    <input class="searchInput" type="text" id="searchInput" placeholder="Suchen nach Ort, Kategorie, Tag…" oninput="renderCards()">
+    <span class="resultsCount" id="resultsCount"></span>
+  </div>
+  <div class="filterBar">
+    <span class="filterLabel">Filter:</span>
+    <button class="filterBtn active" onclick="setFilter('all',this)">Alle</button>
+    <button class="filterBtn" onclick="setFilter('Mixed-Use',this)">Mixed-Use</button>
+    <button class="filterBtn" onclick="setFilter('Residential',this)">Residential</button>
+    <button class="filterBtn" onclick="setFilter('Development',this)">Development</button>
+    <button class="filterBtn" onclick="setFilter('Portfolio',this)">Portfolio</button>
+    <button class="filterBtn" onclick="setFilter('Commercial',this)">Commercial</button>
+  </div>
+  <div class="grid" id="cardGrid"></div>
+  <footer>Swiss Real Estate Asset Portfolio · 2026 · Confidential</footer>
+</div>
+
+<script>
+  // ── PASSWORT ────────────────────────────────────────────────────────────────
+  // Zum Ändern: diesen Wert ersetzen und Datei speichern
+  const ACCESS_CODE = 'SREAP2026';
+
+  function checkPw() {
+    if (document.getElementById('pwInput').value === ACCESS_CODE) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      init();
+    } else {
+      document.getElementById('loginError').textContent = 'Incorrect access code.';
+      document.getElementById('pwInput').value = '';
+    }
+  }
+  function logout() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('loginError').textContent = '';
+  }
+
+  // ── ASSET-DATEN ─────────────────────────────────────────────────────────────
+  // Neues Asset hinzufügen: Eintrag OBEN in dieses Array kopieren,
+  // "dateAdded" auf das heutige Datum setzen → erscheint automatisch zuerst mit "NEU"-Badge.
+  const ASSETS_DATA = [
+  {"id":"NRW-001","dateAdded":"2026-06-04","title":"Portfolio NRW, Rhein-Ruhr Region (Germany)","location":"Nordrhein-Westfalen, Germany","category":"Portfolio","investmentVolume":42000000,"currency":"CHF","yield":4.8,"details":["23 Assets","Mixed-use portfolio","Rhein-Ruhr Region"],"tags":["Portfolio","Deutschland","Mixed-Use"]},
+  {"id":"GVA-004","dateAdded":"2026-05-29","title":"Geneva – Commercial & Residential Mixed-Use Asset","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":23000000,"currency":"CHF","yield":3.65,"details":["7 office units","5 apartments","5 storage units","1 retail space","Underground parking with 10 spaces","Additional optimization/development potential"],"tags":["Genf","Büro","Residential"]},
+  {"id":"SIO-001","dateAdded":"2026-05-29","title":"Sion (Valais) – Large Mixed-Use Asset","location":"Sion, Valais","category":"Mixed-Use","salePrice":40000000,"currency":"CHF","yield":5.0,"details":["39 apartments","3 commercial units","Lease negotiations in progress with Migros, Denner, and additional tenants"],"tags":["Wallis","Mixed-Use","Value-Add"]},
+  {"id":"CDF-001","dateAdded":"2026-05-29","title":"La Chaux-de-Fonds – Mixed-Use Portfolio","location":"La Chaux-de-Fonds, Neuchâtel","category":"Portfolio","investmentVolume":18250000,"currency":"CHF","details":["Portfolio of 4 mixed-use buildings","58 apartments","Retail and office units","Attractive going-in yield","Rental reversion potential","Development upside through attic conversion"],"tags":["Portfolio","Mixed-Use","Development"]},
+  {"id":"CMT-001","dateAdded":"2026-05-29","title":"Crans-Montana (Wallis) – Residential Development","location":"Crans-Montana, Valais","category":"Development","investmentVolume":27000000,"currency":"CHF","details":["65 apartments","Unit distribution to be agreed with the owner","At least one building to remain with the owner","Owner is co-investing in the project"],"tags":["Wallis","Development","Residential"]},
+  {"id":"COL-002","dateAdded":"2026-05-29","title":"Collombey (Wallis) – Apart-Hotel Project","location":"Collombey, Valais","category":"Development","investmentVolume":15000000,"currency":"CHF","yield":5.35,"details":["48 rooms","1 restaurant","Turnkey development project"],"tags":["Wallis","Hotel","Development"]},
+  {"id":"CLA-001","dateAdded":"2026-05-29","title":"Clarens (Vaud)","location":"Clarens, Vaud","category":"Residential","salePrice":15000000,"currency":"CHF","yield":3.24,"annualRentalIncome":486000,"details":["Annual Rental Income: CHF 486'000"],"tags":["Waadt","Residential"]},
+  {"id":"VEY-001","dateAdded":"2026-05-29","title":"Veytaux – Premium Mixed-Use Asset","location":"Veytaux, Vaud","category":"Mixed-Use","investmentVolume":7000000,"currency":"CHF","details":["Recently renovated mixed-use building","Located near Château de Chillon and Lake Geneva","High-end residential positioning","Attractive rental levels","Strong micro-location fundamentals"],"tags":["Waadt","Premium","Renoviert"]},
+  {"id":"GVA-003","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (13M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":13000000,"currency":"CHF","yield":3.70,"grossYield":3.90,"netRentalIncome":502524,"details":["Mixed-use building","Net Rental Income: CHF 502'524"],"tags":["Genf","Mixed-Use"]},
+  {"id":"MCG-001","dateAdded":"2026-05-29","title":"Moulin de Cugy – Stabilised Mixed-Use Asset","location":"Cugy, Vaud","category":"Mixed-Use","investmentVolume":10200000,"currency":"CHF","grossYield":5.13,"details":["Fully stabilised mixed-use asset near Lausanne","Residential, commercial and office units","100% occupancy","Strong cash-flow profile"],"tags":["Waadt","Lausanne","Stabilised","Vollvermietet"]},
+  {"id":"BIN-001","dateAdded":"2026-05-29","title":"Binningen – Mixed-Use Residential Asset","location":"Binningen, Basel-Landschaft","category":"Residential","salePrice":8000000,"currency":"CHF","yield":5.76,"annualRentalIncome":461400,"details":["25 studios","4 apartments","1 restaurant","4 private parking spaces","11 restaurant parking spaces"],"tags":["Basel","Residential","High-Yield"]},
+  {"id":"SIE-001","dateAdded":"2026-05-29","title":"Sierre (Wallis) – Residential Development","location":"Sierre, Valais","category":"Development","investmentVolume":11000000,"currency":"CHF","details":["16 apartments","Turnkey development project"],"tags":["Wallis","Development","Residential"]},
+  {"id":"GVA-002","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (7.2M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":7210000,"currency":"CHF","yield":4.8,"netRentalIncome":350000,"details":["1'200 m² over 4 floors","50 parking spaces"],"tags":["Genf","Mixed-Use","Parking"]},
+  {"id":"ORB-001","dateAdded":"2026-05-29","title":"Orbe – Residential Building","location":"Orbe, Vaud","category":"Residential","investmentVolume":5300000,"currency":"CHF","details":["12 fully renovated apartments","Condominium conversion (PPE) strategy","Additional value-creation potential"],"tags":["Waadt","Residential","Renoviert"]},
+  {"id":"MTX-001","dateAdded":"2026-05-29","title":"Montreux (Vaud) – Mixed-Use Building","location":"Montreux, Vaud","category":"Mixed-Use","salePrice":5800000,"currency":"CHF","yield":3.25,"netRentalIncome":189000,"details":["9 apartments","3 storage units","1 retail space","1 outdoor parking space"],"tags":["Waadt","Mixed-Use"]},
+  {"id":"NEU-001","dateAdded":"2026-05-29","title":"Neuveville – Residential Building","location":"Neuveville, Bern","category":"Residential","investmentVolume":5200000,"currency":"CHF","details":["10 apartments","Located near Lake Biel and train station","Stable in-place income","Value-add potential through extension and rental reversion strategies"],"tags":["Bern","Residential","Value-Add"]},
+  {"id":"COL-001","dateAdded":"2026-05-29","title":"Collombey (Wallis) – Medical Clinic","location":"Collombey, Valais","category":"Commercial","salePrice":7500000,"currency":"CHF","yield":2.46,"yieldPotential":4.84,"details":["Medical clinic asset","Current Yield: 2.46%","Potential Yield: 4.84%","Value-add potential"],"tags":["Wallis","Klinik","Value-Add"]},
+  {"id":"GVA-001","dateAdded":"2026-05-29","title":"Geneva – Residential & Commercial Building","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":10800000,"currency":"CHF","yield":2.62,"grossYield":3.37,"grossIncome":364299,"operatingExpenses":81794,"netRentalIncome":282505,"landArea":139,"livingArea":670,"commercialArea":140,"totalArea":810,"pricePerSqm":13333,"marketPriceRange":"14'000–17'000","details":["9 residential units + 1 commercial unit","Land Area: 139 m²","Total Area: ≈ 810 m²","Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"],"tags":["Genf","Residential","Commercial"]}
+  ];
+
+  // ── LOGIK ────────────────────────────────────────────────────────────────────
+  let allAssets = [];
+  let activeFilter = 'all';
+
+  function loadAssets() {
+    allAssets = ASSETS_DATA;
+    allAssets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+  }
+
+  function isNew(dateStr) {
+    return (new Date() - new Date(dateStr)) < 7 * 24 * 60 * 60 * 1000;
+  }
+
+  function formatCHF(n) {
+    if (!n) return '–';
+    if (n >= 1000000) return 'CHF ' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + ' Mio.';
+    return 'CHF ' + n.toLocaleString('de-CH');
+  }
+
+  function formatYield(y) {
+    return (y || y === 0) ? y.toFixed(2) + '%' : null;
+  }
+
+  function renderStats() {
+    const total = allAssets.reduce((s,a) => s + (a.salePrice || a.investmentVolume || 0), 0);
+    const yields = allAssets.filter(a => a.yield).map(a => a.yield);
+    const avgY = yields.length ? (yields.reduce((s,y) => s+y,0)/yields.length) : 0;
+    const newCount = allAssets.filter(a => isNew(a.dateAdded)).length;
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-value">${allAssets.length}</div><div class="stat-sub">Liegenschaften</div></div>
+      <div class="stat"><div class="stat-label">Gesamtvolumen</div><div class="stat-value">${formatCHF(total)}</div><div class="stat-sub">Investitionsvolumen</div></div>
+      <div class="stat"><div class="stat-label">Ø Rendite</div><div class="stat-value">${avgY.toFixed(2)}%</div><div class="stat-sub">Netto-Rendite Ø</div></div>
+      ${newCount > 0 ? `<div class="stat"><div class="stat-label">Neu</div><div class="stat-value" style="color:var(--gold)">${newCount}</div><div class="stat-sub">Diese Woche hinzugefügt</div></div>` : ''}
+    `;
+  }
+
+  function setFilter(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.filterBtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCards();
+  }
+
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    return allAssets.filter(a => {
+      const matchCat = activeFilter === 'all' || a.category === activeFilter;
+      if (!q) return matchCat;
+      const hay = [a.title, a.location, a.category, ...(a.tags||[]), ...(a.details||[])].join(' ').toLowerCase();
+      return matchCat && hay.includes(q);
+    });
+  }
+
+  function renderCards() {
+    const filtered = getFiltered();
+    document.getElementById('resultsCount').textContent = `${filtered.length} Objekt${filtered.length !== 1 ? 'e' : ''}`;
+    document.getElementById('cardGrid').innerHTML = filtered.map(a => {
+      const price = a.salePrice || a.investmentVolume;
+      const yld = a.yield || a.grossYield;
+      const novel = isNew(a.dateAdded);
+      const metrics = [
+        price ? `<div class="metric"><div class="metric-label">${a.salePrice?'Kaufpreis':'Volumen'}</div><div class="metric-value highlight">${formatCHF(price)}</div></div>` : '',
+        yld ? `<div class="metric"><div class="metric-label">Rendite</div><div class="metric-value green">${formatYield(yld)}</div></div>` : '',
+        a.yieldPotential ? `<div class="metric"><div class="metric-label">Pot. Rendite</div><div class="metric-value">${formatYield(a.yieldPotential)}</div></div>` : '',
+        a.netRentalIncome ? `<div class="metric"><div class="metric-label">Nettomiete/J.</div><div class="metric-value">${formatCHF(a.netRentalIncome)}</div></div>` : '',
+        a.annualRentalIncome ? `<div class="metric"><div class="metric-label">Jahresmiete</div><div class="metric-value">${formatCHF(a.annualRentalIncome)}</div></div>` : '',
+      ].filter(Boolean).join('');
+      const dateStr = new Date(a.dateAdded).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
+      return `
+        <div class="card${novel?' isNew':''}">
+          ${novel?'<div class="newBadge">Neu</div>':''}
+          <div class="cardCategory">${a.category}</div>
+          <div class="cardTitle">${a.title}</div>
+          <div class="cardLocation">${a.location}</div>
+          <div class="cardMetrics">${metrics}</div>
+          ${a.details?.length ? `<ul class="cardDetails">${a.details.map(d=>`<li>${d}</li>`).join('')}</ul>` : ''}
+          ${a.tags?.length ? `<div class="cardTags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+          <div class="cardDate">Hinzugefügt: ${dateStr} · ID: ${a.id}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function init() {
+    loadAssets();
+    renderStats();
+    renderCards();
+  }
+</script>
+</body>
+</html>

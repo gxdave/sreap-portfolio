@@ -1,0 +1,312 @@
+[
+  {
+    "id": "NRW-001",
+    "dateAdded": "2026-06-04",
+    "title": "Portfolio NRW, Rhein-Ruhr Region (Germany)",
+    "location": "Nordrhein-Westfalen, Germany",
+    "category": "Portfolio",
+    "investmentVolume": 42000000,
+    "currency": "CHF",
+    "yield": 4.8,
+    "details": [
+      "23 Assets",
+      "Mixed-use portfolio",
+      "Rhein-Ruhr Region"
+    ],
+    "tags": ["Portfolio", "Deutschland", "Mixed-Use"]
+  },
+  {
+    "id": "GVA-004",
+    "dateAdded": "2026-05-29",
+    "title": "Geneva – Commercial & Residential Mixed-Use Asset",
+    "location": "Geneva, Switzerland",
+    "category": "Mixed-Use",
+    "salePrice": 23000000,
+    "currency": "CHF",
+    "yield": 3.65,
+    "details": [
+      "7 office units",
+      "5 apartments",
+      "5 storage units",
+      "1 retail space",
+      "Underground parking with 10 spaces",
+      "Additional optimization/development potential"
+    ],
+    "tags": ["Genf", "Büro", "Residential"]
+  },
+  {
+    "id": "SIO-001",
+    "dateAdded": "2026-05-29",
+    "title": "Sion (Valais) – Large Mixed-Use Asset",
+    "location": "Sion, Valais",
+    "category": "Mixed-Use",
+    "salePrice": 40000000,
+    "currency": "CHF",
+    "yield": 5.0,
+    "details": [
+      "39 apartments",
+      "3 commercial units",
+      "Lease negotiations in progress with Migros, Denner, and additional tenants"
+    ],
+    "tags": ["Wallis", "Mixed-Use", "Value-Add"]
+  },
+  {
+    "id": "CDF-001",
+    "dateAdded": "2026-05-29",
+    "title": "La Chaux-de-Fonds – Mixed-Use Portfolio",
+    "location": "La Chaux-de-Fonds, Neuchâtel",
+    "category": "Portfolio",
+    "investmentVolume": 18250000,
+    "currency": "CHF",
+    "details": [
+      "Portfolio of 4 mixed-use buildings",
+      "58 apartments",
+      "Retail and office units",
+      "Attractive going-in yield",
+      "Rental reversion potential",
+      "Development upside through attic conversion"
+    ],
+    "tags": ["Portfolio", "Mixed-Use", "Development"]
+  },
+  {
+    "id": "CMT-001",
+    "dateAdded": "2026-05-29",
+    "title": "Crans-Montana (Wallis) – Residential Development",
+    "location": "Crans-Montana, Valais",
+    "category": "Development",
+    "investmentVolume": 27000000,
+    "currency": "CHF",
+    "details": [
+      "65 apartments",
+      "Unit distribution to be agreed with the owner",
+      "At least one building to remain with the owner",
+      "Owner is co-investing in the project"
+    ],
+    "tags": ["Wallis", "Development", "Residential"]
+  },
+  {
+    "id": "COL-002",
+    "dateAdded": "2026-05-29",
+    "title": "Collombey (Wallis) – Apart-Hotel Project",
+    "location": "Collombey, Valais",
+    "category": "Development",
+    "investmentVolume": 15000000,
+    "currency": "CHF",
+    "yield": 5.35,
+    "details": [
+      "48 rooms",
+      "1 restaurant",
+      "Turnkey development project"
+    ],
+    "tags": ["Wallis", "Hotel", "Development"]
+  },
+  {
+    "id": "CLA-001",
+    "dateAdded": "2026-05-29",
+    "title": "Clarens (Vaud)",
+    "location": "Clarens, Vaud",
+    "category": "Residential",
+    "salePrice": 15000000,
+    "currency": "CHF",
+    "yield": 3.24,
+    "annualRentalIncome": 486000,
+    "details": [
+      "Annual Rental Income: CHF 486'000"
+    ],
+    "tags": ["Waadt", "Residential"]
+  },
+  {
+    "id": "VEY-001",
+    "dateAdded": "2026-05-29",
+    "title": "Veytaux – Premium Mixed-Use Asset",
+    "location": "Veytaux, Vaud",
+    "category": "Mixed-Use",
+    "investmentVolume": 7000000,
+    "currency": "CHF",
+    "details": [
+      "Recently renovated mixed-use building",
+      "Located near Château de Chillon and Lake Geneva",
+      "High-end residential positioning",
+      "Attractive rental levels",
+      "Strong micro-location fundamentals"
+    ],
+    "tags": ["Waadt", "Premium", "Renoviert"]
+  },
+  {
+    "id": "GVA-003",
+    "dateAdded": "2026-05-29",
+    "title": "Geneva – Mixed-Use Building (13M)",
+    "location": "Geneva, Switzerland",
+    "category": "Mixed-Use",
+    "salePrice": 13000000,
+    "currency": "CHF",
+    "yield": 3.70,
+    "grossYield": 3.90,
+    "netRentalIncome": 502524,
+    "details": [
+      "Mixed-use building",
+      "Net Rental Income: CHF 502'524"
+    ],
+    "tags": ["Genf", "Mixed-Use"]
+  },
+  {
+    "id": "MCG-001",
+    "dateAdded": "2026-05-29",
+    "title": "Moulin de Cugy – Stabilised Mixed-Use Asset",
+    "location": "Cugy, Vaud",
+    "category": "Mixed-Use",
+    "investmentVolume": 10200000,
+    "currency": "CHF",
+    "grossYield": 5.13,
+    "details": [
+      "Fully stabilised mixed-use asset near Lausanne",
+      "Residential, commercial and office units",
+      "100% occupancy",
+      "Strong cash-flow profile"
+    ],
+    "tags": ["Waadt", "Lausanne", "Stabilised", "Vollvermietet"]
+  },
+  {
+    "id": "BIN-001",
+    "dateAdded": "2026-05-29",
+    "title": "Binningen – Mixed-Use Residential Asset",
+    "location": "Binningen, Basel-Landschaft",
+    "category": "Residential",
+    "salePrice": 8000000,
+    "currency": "CHF",
+    "yield": 5.76,
+    "annualRentalIncome": 461400,
+    "details": [
+      "25 studios",
+      "4 apartments",
+      "1 restaurant",
+      "4 private parking spaces",
+      "11 restaurant parking spaces"
+    ],
+    "tags": ["Basel", "Residential", "High-Yield"]
+  },
+  {
+    "id": "SIE-001",
+    "dateAdded": "2026-05-29",
+    "title": "Sierre (Wallis) – Residential Development",
+    "location": "Sierre, Valais",
+    "category": "Development",
+    "investmentVolume": 11000000,
+    "currency": "CHF",
+    "details": [
+      "16 apartments",
+      "Turnkey development project"
+    ],
+    "tags": ["Wallis", "Development", "Residential"]
+  },
+  {
+    "id": "GVA-002",
+    "dateAdded": "2026-05-29",
+    "title": "Geneva – Mixed-Use Building (7.2M)",
+    "location": "Geneva, Switzerland",
+    "category": "Mixed-Use",
+    "salePrice": 7210000,
+    "currency": "CHF",
+    "yield": 4.8,
+    "netRentalIncome": 350000,
+    "details": [
+      "1'200 m² over 4 floors",
+      "50 parking spaces"
+    ],
+    "tags": ["Genf", "Mixed-Use", "Parking"]
+  },
+  {
+    "id": "ORB-001",
+    "dateAdded": "2026-05-29",
+    "title": "Orbe – Residential Building",
+    "location": "Orbe, Vaud",
+    "category": "Residential",
+    "investmentVolume": 5300000,
+    "currency": "CHF",
+    "details": [
+      "12 fully renovated apartments",
+      "Condominium conversion (PPE) strategy",
+      "Additional value-creation potential"
+    ],
+    "tags": ["Waadt", "Residential", "Renoviert"]
+  },
+  {
+    "id": "MTX-001",
+    "dateAdded": "2026-05-29",
+    "title": "Montreux (Vaud) – Mixed-Use Building",
+    "location": "Montreux, Vaud",
+    "category": "Mixed-Use",
+    "salePrice": 5800000,
+    "currency": "CHF",
+    "yield": 3.25,
+    "netRentalIncome": 189000,
+    "details": [
+      "9 apartments",
+      "3 storage units",
+      "1 retail space",
+      "1 outdoor parking space"
+    ],
+    "tags": ["Waadt", "Mixed-Use"]
+  },
+  {
+    "id": "NEU-001",
+    "dateAdded": "2026-05-29",
+    "title": "Neuveville – Residential Building",
+    "location": "Neuveville, Bern",
+    "category": "Residential",
+    "investmentVolume": 5200000,
+    "currency": "CHF",
+    "details": [
+      "10 apartments",
+      "Located near Lake Biel and train station",
+      "Stable in-place income",
+      "Value-add potential through extension and rental reversion strategies"
+    ],
+    "tags": ["Bern", "Residential", "Value-Add"]
+  },
+  {
+    "id": "COL-001",
+    "dateAdded": "2026-05-29",
+    "title": "Collombey (Wallis) – Medical Clinic",
+    "location": "Collombey, Valais",
+    "category": "Commercial",
+    "salePrice": 7500000,
+    "currency": "CHF",
+    "yield": 2.46,
+    "yieldPotential": 4.84,
+    "details": [
+      "Medical clinic asset",
+      "Current Yield: 2.46%",
+      "Potential Yield: 4.84%",
+      "Value-add potential"
+    ],
+    "tags": ["Wallis", "Klinik", "Value-Add"]
+  },
+  {
+    "id": "GVA-001",
+    "dateAdded": "2026-05-29",
+    "title": "Geneva – Residential & Commercial Building",
+    "location": "Geneva, Switzerland",
+    "category": "Mixed-Use",
+    "salePrice": 10800000,
+    "currency": "CHF",
+    "yield": 2.62,
+    "grossYield": 3.37,
+    "grossIncome": 364299,
+    "operatingExpenses": 81794,
+    "netRentalIncome": 282505,
+    "landArea": 139,
+    "livingArea": 670,
+    "commercialArea": 140,
+    "totalArea": 810,
+    "pricePerSqm": 13333,
+    "marketPriceRange": "14'000–17'000",
+    "details": [
+      "9 residential units + 1 commercial unit",
+      "Land Area: 139 m²",
+      "Total Area: ≈ 810 m²",
+      "Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"
+    ],
+    "tags": ["Genf", "Residential", "Commercial"]
+  }
+]
