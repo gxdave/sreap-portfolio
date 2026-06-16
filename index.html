@@ -133,6 +133,7 @@
     .formActions { display: flex; gap: 10px; margin-top: 20px; }
     .btnPrimary { padding: 10px 20px; background: var(--gold); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer; border-radius: 5px; transition: background .15s; flex: 1; }
     .btnPrimary:hover { background: var(--gold-light); }
+    .btnPrimary:disabled { opacity: .6; cursor: not-allowed; }
     .btnSecondary { padding: 10px 20px; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 500; border: 1px solid var(--border); cursor: pointer; border-radius: 5px; transition: all .15s; }
     .btnSecondary:hover { border-color: var(--text-muted); color: var(--text); }
     .formFeedback { padding: 10px 14px; border-radius: 5px; font-size: 12px; margin-top: 12px; display: none; }
@@ -147,7 +148,6 @@
     .adminAssetList { display: flex; flex-direction: column; gap: 6px; }
     .adminAssetItem { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
     .adminAssetItem.isCustom { border-color: #ddd3b0; background: var(--gold-bg); }
-    .adminAssetItem.isOverridden { border-color: #b8d0ea; background: var(--blue-bg); }
     .adminAssetInfo { flex: 1; min-width: 0; }
     .adminAssetTitle { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .adminAssetMeta { font-size: 11px; color: var(--text-muted); }
@@ -155,13 +155,10 @@
     .adminAssetBadge { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
     .adminAssetBadge.builtin { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); }
     .adminAssetBadge.custom { background: var(--gold-bg); border: 1px solid #e8d9b4; color: var(--gold); }
-    .adminAssetBadge.overridden { background: var(--blue-bg); border: 1px solid #b8d0ea; color: var(--blue); }
     .editBtn { padding: 5px 10px; background: transparent; border: 1px solid #b8d0ea; color: var(--blue); font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
     .editBtn:hover { background: var(--blue-bg); }
     .deleteBtn { padding: 5px 10px; background: transparent; border: 1px solid #e8c8c4; color: #c0392b; font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
     .deleteBtn:hover { background: #fdf0ee; }
-    .resetBtn { padding: 5px 10px; background: transparent; border: 1px solid #e8c8c4; color: #c0392b; font-size: 11px; border-radius: 4px; cursor: pointer; transition: all .15s; }
-    .resetBtn:hover { background: #fdf0ee; }
 
     .adminExport { margin-top: 20px; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
     .adminExportText { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
@@ -177,6 +174,7 @@
       .headerTitle { display: none; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -350,15 +348,11 @@
         </div>
         <div id="adminAssetList" class="adminAssetList"></div>
         <div class="adminExport">
-          <div class="adminExportText">Export changes as JSON. <strong>Export new assets</strong> and paste into <code>assets.json</code>; <strong>Export edits</strong> shows all overridden fields.</div>
+          <div class="adminExportText">Export all assets from Supabase as a JSON backup file.</div>
           <div class="exportBtns">
-            <button class="exportBtn" onclick="exportCustomJSON()">
+            <button class="exportBtn" onclick="exportAllJSON()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export New Assets
-            </button>
-            <button class="exportBtn" onclick="exportOverridesJSON()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export Edits
+              Export All Assets
             </button>
           </div>
         </div>
@@ -370,36 +364,68 @@
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────
-const ACCESS_CODE    = 'SREAP2026';
-const CUSTOM_KEY     = 'sreap_custom_assets';
-const OVERRIDES_KEY  = 'sreap_asset_overrides';
-
-// ── BUILTIN DATA ─────────────────────────────────────────────────────
-const BUILTIN_ASSETS = [
-  {"id":"NRW-001","dateAdded":"2026-06-04","title":"Portfolio NRW, Rhein-Ruhr Region (Germany)","location":"Nordrhein-Westfalen, Germany","category":"Portfolio","investmentVolume":42000000,"currency":"CHF","yield":4.8,"details":["23 Assets","Mixed-use portfolio","Rhein-Ruhr Region"],"tags":["Portfolio","Germany","Mixed-Use"]},
-  {"id":"GVA-004","dateAdded":"2026-05-29","title":"Geneva – Commercial & Residential Mixed-Use Asset","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":23000000,"currency":"CHF","yield":3.65,"details":["7 office units","5 apartments","5 storage units","1 retail space","Underground parking with 10 spaces","Additional optimization/development potential"],"tags":["Geneva","Office","Residential"]},
-  {"id":"SIO-001","dateAdded":"2026-05-29","title":"Sion (Valais) – Large Mixed-Use Asset","location":"Sion, Valais","category":"Mixed-Use","salePrice":40000000,"currency":"CHF","yield":5.0,"details":["39 apartments","3 commercial units","Lease negotiations in progress with Migros, Denner, and additional tenants"],"tags":["Valais","Mixed-Use","Value-Add"]},
-  {"id":"CDF-001","dateAdded":"2026-05-29","title":"La Chaux-de-Fonds – Mixed-Use Portfolio","location":"La Chaux-de-Fonds, Neuchâtel","category":"Portfolio","investmentVolume":18250000,"currency":"CHF","details":["Portfolio of 4 mixed-use buildings","58 apartments","Retail and office units","Attractive going-in yield","Rental reversion potential","Development upside through attic conversion"],"tags":["Portfolio","Mixed-Use","Development"]},
-  {"id":"CMT-001","dateAdded":"2026-05-29","title":"Crans-Montana (Valais) – Residential Development","location":"Crans-Montana, Valais","category":"Development","investmentVolume":27000000,"currency":"CHF","details":["65 apartments","Unit distribution to be agreed with the owner","At least one building to remain with the owner","Owner is co-investing in the project"],"tags":["Valais","Development","Residential"]},
-  {"id":"COL-002","dateAdded":"2026-05-29","title":"Collombey (Valais) – Apart-Hotel Project","location":"Collombey, Valais","category":"Development","investmentVolume":15000000,"currency":"CHF","yield":5.35,"details":["48 rooms","1 restaurant","Turnkey development project"],"tags":["Valais","Hotel","Development"]},
-  {"id":"CLA-001","dateAdded":"2026-05-29","title":"Clarens (Vaud)","location":"Clarens, Vaud","category":"Residential","salePrice":15000000,"currency":"CHF","yield":3.24,"annualRentalIncome":486000,"details":["Annual Rental Income: CHF 486'000"],"tags":["Vaud","Residential"]},
-  {"id":"VEY-001","dateAdded":"2026-05-29","title":"Veytaux – Premium Mixed-Use Asset","location":"Veytaux, Vaud","category":"Mixed-Use","investmentVolume":7000000,"currency":"CHF","details":["Recently renovated mixed-use building","Located near Château de Chillon and Lake Geneva","High-end residential positioning","Attractive rental levels","Strong micro-location fundamentals"],"tags":["Vaud","Premium","Renovated"]},
-  {"id":"GVA-003","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (13M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":13000000,"currency":"CHF","yield":3.70,"grossYield":3.90,"netRentalIncome":502524,"details":["Mixed-use building","Net Rental Income: CHF 502'524"],"tags":["Geneva","Mixed-Use"]},
-  {"id":"MCG-001","dateAdded":"2026-05-29","title":"Moulin de Cugy – Stabilised Mixed-Use Asset","location":"Cugy, Vaud","category":"Mixed-Use","investmentVolume":10200000,"currency":"CHF","grossYield":5.13,"details":["Fully stabilised mixed-use asset near Lausanne","Residential, commercial and office units","100% occupancy","Strong cash-flow profile"],"tags":["Vaud","Lausanne","Stabilised","Fully Let"]},
-  {"id":"BIN-001","dateAdded":"2026-05-29","title":"Binningen – Mixed-Use Residential Asset","location":"Binningen, Basel-Landschaft","category":"Residential","salePrice":8000000,"currency":"CHF","yield":5.76,"annualRentalIncome":461400,"details":["25 studios","4 apartments","1 restaurant","4 private parking spaces","11 restaurant parking spaces"],"tags":["Basel","Residential","High-Yield"]},
-  {"id":"SIE-001","dateAdded":"2026-05-29","title":"Sierre (Valais) – Residential Development","location":"Sierre, Valais","category":"Development","investmentVolume":11000000,"currency":"CHF","details":["16 apartments","Turnkey development project"],"tags":["Valais","Development","Residential"]},
-  {"id":"GVA-002","dateAdded":"2026-05-29","title":"Geneva – Mixed-Use Building (7.2M)","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":7210000,"currency":"CHF","yield":4.8,"netRentalIncome":350000,"details":["1'200 m² over 4 floors","50 parking spaces"],"tags":["Geneva","Mixed-Use","Parking"]},
-  {"id":"ORB-001","dateAdded":"2026-05-29","title":"Orbe – Residential Building","location":"Orbe, Vaud","category":"Residential","investmentVolume":5300000,"currency":"CHF","details":["12 fully renovated apartments","Condominium conversion (PPE) strategy","Additional value-creation potential"],"tags":["Vaud","Residential","Renovated"]},
-  {"id":"MTX-001","dateAdded":"2026-05-29","title":"Montreux (Vaud) – Mixed-Use Building","location":"Montreux, Vaud","category":"Mixed-Use","salePrice":5800000,"currency":"CHF","yield":3.25,"netRentalIncome":189000,"details":["9 apartments","3 storage units","1 retail space","1 outdoor parking space"],"tags":["Vaud","Mixed-Use"]},
-  {"id":"NEU-001","dateAdded":"2026-05-29","title":"Neuveville – Residential Building","location":"Neuveville, Bern","category":"Residential","investmentVolume":5200000,"currency":"CHF","details":["10 apartments","Located near Lake Biel and train station","Stable in-place income","Value-add potential through extension and rental reversion strategies"],"tags":["Bern","Residential","Value-Add"]},
-  {"id":"COL-001","dateAdded":"2026-05-29","title":"Collombey (Valais) – Medical Clinic","location":"Collombey, Valais","category":"Commercial","salePrice":7500000,"currency":"CHF","yield":2.46,"yieldPotential":4.84,"details":["Medical clinic asset","Current Yield: 2.46%","Potential Yield: 4.84%","Value-add potential"],"tags":["Valais","Clinic","Value-Add"]},
-  {"id":"GVA-001","dateAdded":"2026-05-29","title":"Geneva – Residential & Commercial Building","location":"Geneva, Switzerland","category":"Mixed-Use","salePrice":10800000,"currency":"CHF","yield":2.62,"grossYield":3.37,"grossIncome":364299,"operatingExpenses":81794,"netRentalIncome":282505,"landArea":139,"livingArea":670,"commercialArea":140,"totalArea":810,"pricePerSqm":13333,"marketPriceRange":"14'000–17'000","details":["9 residential units + 1 commercial unit","Land Area: 139 m²","Total Area: ≈ 810 m²","Price per m²: CHF 13'333 (Market: CHF 14'000–17'000)"],"tags":["Geneva","Residential","Commercial"]}
-];
+const ACCESS_CODE = 'SREAP2026';
+const SUPA_URL    = 'https://lfpoyicacpvhbokzqbgv.supabase.co';
+const SUPA_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcG95aWNhY3B2aGJva3pxYmd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjY0NDUsImV4cCI6MjA5NzIwMjQ0NX0.QPEg-aHJnoxZ8TWNCV9GlmcSMTOWPz0o2aLvx8lW5R8';
+const db          = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ── STATE ────────────────────────────────────────────────────────────
 let allAssets    = [];
 let activeFilter = 'all';
 let editMode     = false;
+
+// ── DATA MAPPING ─────────────────────────────────────────────────────
+function mapRow(r) {
+  return {
+    id: r.id,
+    dateAdded: r.date_added,
+    title: r.title,
+    location: r.location,
+    category: r.category,
+    currency: r.currency || 'CHF',
+    investmentVolume: r.investment_volume,
+    salePrice: r.sale_price,
+    yield: r.yield_net,
+    grossYield: r.gross_yield,
+    yieldPotential: r.yield_potential,
+    annualRentalIncome: r.annual_rental_income,
+    netRentalIncome: r.net_rental_income,
+    grossIncome: r.gross_income,
+    operatingExpenses: r.operating_expenses,
+    landArea: r.land_area,
+    livingArea: r.living_area,
+    commercialArea: r.commercial_area,
+    totalArea: r.total_area,
+    pricePerSqm: r.price_per_sqm,
+    marketPriceRange: r.market_price_range,
+    details: r.details || [],
+    tags: r.tags || [],
+    isNew: r.is_new,
+    isBuiltin: r.is_builtin
+  };
+}
+
+function mapToRow(o, isBuiltin) {
+  return {
+    id: o.id,
+    date_added: o.dateAdded,
+    title: o.title,
+    location: o.location,
+    category: o.category,
+    currency: 'CHF',
+    investment_volume: o.investmentVolume || null,
+    sale_price: o.salePrice || null,
+    yield_net: o.yield || null,
+    gross_yield: o.grossYield || null,
+    yield_potential: o.yieldPotential || null,
+    annual_rental_income: o.annualRentalIncome || null,
+    net_rental_income: o.netRentalIncome || null,
+    details: o.details || [],
+    tags: o.tags || [],
+    is_new: !!o.isNew,
+    is_builtin: !!isBuiltin
+  };
+}
 
 // ── AUTH ─────────────────────────────────────────────────────────────
 function checkPw() {
@@ -407,7 +433,6 @@ function checkPw() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
     init();
-    // Open admin panel automatically if ?admin in URL
     if (new URLSearchParams(window.location.search).has('admin')) openAdmin();
   } else {
     document.getElementById('loginError').textContent = 'Incorrect access code.';
@@ -421,17 +446,6 @@ function logout() {
   document.getElementById('loginError').textContent = '';
 }
 
-// ── STORAGE ──────────────────────────────────────────────────────────
-function getCustomAssets() {
-  try { return JSON.parse(localStorage.getItem(CUSTOM_KEY) || '[]'); } catch { return []; }
-}
-function saveCustomAssets(arr) { localStorage.setItem(CUSTOM_KEY, JSON.stringify(arr)); }
-
-function getOverrides() {
-  try { return JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}'); } catch { return {}; }
-}
-function saveOverrides(obj) { localStorage.setItem(OVERRIDES_KEY, JSON.stringify(obj)); }
-
 // ── UTILS ─────────────────────────────────────────────────────────────
 function formatCHF(n) {
   if (!n) return '–';
@@ -441,12 +455,14 @@ function formatCHF(n) {
 function formatYield(y) { return (y || y === 0) ? y.toFixed(2) + '%' : null; }
 
 // ── LOAD ──────────────────────────────────────────────────────────────
-function loadAssets() {
-  const custom    = getCustomAssets();
-  const overrides = getOverrides();
-  const builtins  = BUILTIN_ASSETS.map(a => overrides[a.id] ? {...a, ...overrides[a.id], _overridden: true} : a);
-  allAssets = [...custom, ...builtins];
-  allAssets.sort((a, b) => {
+async function loadAssets() {
+  const { data, error } = await db.from('assets').select('*');
+  if (error) {
+    document.getElementById('cardGrid').innerHTML =
+      `<div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--red)">Error loading assets: ${error.message}</div>`;
+    return;
+  }
+  allAssets = data.map(mapRow).sort((a, b) => {
     if (a.isNew && !b.isNew) return -1;
     if (!a.isNew && b.isNew) return 1;
     return new Date(b.dateAdded) - new Date(a.dateAdded);
@@ -609,10 +625,11 @@ function buildAssetFromForm() {
   const category = document.getElementById('fCategory').value;
   if (!id || !title || !location || !category) return null;
 
-  const obj = { id, title, location, category, currency: 'CHF',
+  const obj = {
+    id, title, location, category, currency: 'CHF',
     dateAdded: document.getElementById('fDate').value || new Date().toISOString().split('T')[0],
-    isNew: document.getElementById('fIsNew').checked || undefined };
-  if (!obj.isNew) delete obj.isNew;
+    isNew: document.getElementById('fIsNew').checked
+  };
 
   const sp = parseFloat(document.getElementById('fSalePrice').value);
   const iv = parseFloat(document.getElementById('fInvestVol').value);
@@ -634,84 +651,66 @@ function buildAssetFromForm() {
   return obj;
 }
 
-function saveAsset() {
+async function saveAsset() {
   hideFeedback();
   const obj = buildAssetFromForm();
   if (!obj) { showFeedback('error', 'Please fill in all required fields (ID, Title, Location, Category).'); return; }
 
-  const isBuiltin = BUILTIN_ASSETS.some(a => a.id === obj.id);
-  const custom    = getCustomAssets();
-  const overrides = getOverrides();
+  const saveBtn = document.getElementById('formSaveBtn');
+  saveBtn.disabled = true;
 
   if (editMode) {
-    if (isBuiltin) {
-      const {id, ...rest} = obj;
-      overrides[id] = rest;
-      saveOverrides(overrides);
-    } else {
-      const idx = custom.findIndex(a => a.id === obj.id);
-      if (idx >= 0) { const {_custom, ...rest} = custom[idx]; custom[idx] = {...rest, ...obj, _custom: true}; }
-      saveCustomAssets(custom);
-    }
+    const existing = allAssets.find(a => a.id === obj.id);
+    const row = mapToRow(obj, existing?.isBuiltin);
+    const { error } = await db.from('assets').update(row).eq('id', obj.id);
+    if (error) { showFeedback('error', 'Save failed: ' + error.message); saveBtn.disabled = false; return; }
     showFeedback('success', `✓ Asset "${obj.id}" updated successfully.`);
   } else {
-    const allIds = [...custom.map(a=>a.id), ...BUILTIN_ASSETS.map(a=>a.id)];
-    if (allIds.includes(obj.id)) { showFeedback('error', `ID "${obj.id}" already exists. Please choose a different ID.`); return; }
-    obj._custom = true;
-    custom.unshift(obj);
-    saveCustomAssets(custom);
+    const exists = allAssets.some(a => a.id === obj.id);
+    if (exists) { showFeedback('error', `ID "${obj.id}" already exists. Please choose a different ID.`); saveBtn.disabled = false; return; }
+    const row = mapToRow(obj, false);
+    const { error } = await db.from('assets').insert(row);
+    if (error) { showFeedback('error', 'Save failed: ' + error.message); saveBtn.disabled = false; return; }
     showFeedback('success', `✓ Asset "${obj.id}" added successfully.`);
     resetForm();
   }
 
-  loadAssets();
+  saveBtn.disabled = false;
+  await loadAssets();
   renderStats();
   renderCards();
 }
 
 // ── ADMIN LIST ────────────────────────────────────────────────────────
-function deleteAsset(id) {
-  const isBuiltin = BUILTIN_ASSETS.some(a => a.id === id);
-  if (isBuiltin) {
-    if (!confirm(`"${id}" is a built-in asset. Reset all edits to this asset?`)) return;
-    const ov = getOverrides();
-    delete ov[id];
-    saveOverrides(ov);
-  } else {
-    if (!confirm(`Delete asset "${id}"?`)) return;
-    saveCustomAssets(getCustomAssets().filter(a => a.id !== id));
-  }
-  loadAssets();
+async function deleteAsset(id) {
+  const asset = allAssets.find(a => a.id === id);
+  if (!asset) return;
+  const msg = asset.isBuiltin
+    ? `"${id}" is a built-in asset. Really delete it?`
+    : `Delete asset "${id}"?`;
+  if (!confirm(msg)) return;
+  const { error } = await db.from('assets').delete().eq('id', id);
+  if (error) { alert('Delete failed: ' + error.message); return; }
+  await loadAssets();
   renderStats();
   renderCards();
   renderAdminList('');
 }
 
 function renderAdminList(query) {
-  const q           = (query || '').toLowerCase();
-  const customIds   = new Set(getCustomAssets().map(a => a.id));
-  const overrideIds = new Set(Object.keys(getOverrides()));
-
-  const visible = allAssets.filter(a => {
-    if (!q) return true;
-    return (a.title + a.id + a.location).toLowerCase().includes(q);
-  });
+  const q = (query || '').toLowerCase();
+  const visible = allAssets.filter(a =>
+    !q || (a.title + a.id + a.location).toLowerCase().includes(q)
+  );
 
   document.getElementById('adminAssetCount').textContent = allAssets.length;
   document.getElementById('adminAssetList').innerHTML = visible.map(a => {
-    const isCustom     = customIds.has(a.id);
-    const isOverridden = !isCustom && overrideIds.has(a.id);
     const price = a.salePrice || a.investmentVolume;
-    let badge = '';
-    if (isCustom)          badge = '<span class="adminAssetBadge custom">New</span>';
-    else if (isOverridden) badge = '<span class="adminAssetBadge overridden">Edited</span>';
-    else                   badge = '<span class="adminAssetBadge builtin">Built-in</span>';
-
-    const deleteLbl = isCustom ? 'Delete' : (isOverridden ? 'Reset' : '');
-    const deleteCls = isCustom ? 'deleteBtn' : 'resetBtn';
-
+    const badge = a.isBuiltin
+      ? '<span class="adminAssetBadge builtin">Built-in</span>'
+      : '<span class="adminAssetBadge custom">Custom</span>';
     return `
-      <div class="adminAssetItem${isCustom?' isCustom':''}${isOverridden?' isOverridden':''}">
+      <div class="adminAssetItem${a.isBuiltin ? '' : ' isCustom'}">
         <div class="adminAssetInfo">
           <div class="adminAssetTitle">${a.title}</div>
           <div class="adminAssetMeta">${a.id} · ${a.category}${price ? ' · ' + formatCHF(price) : ''}</div>
@@ -719,35 +718,27 @@ function renderAdminList(query) {
         ${badge}
         <div class="adminAssetBtns">
           <button class="editBtn" onclick="editAsset('${a.id}')">Edit</button>
-          ${(isCustom || isOverridden) ? `<button class="${deleteCls}" onclick="deleteAsset('${a.id}')">${deleteLbl}</button>` : ''}
+          <button class="deleteBtn" onclick="deleteAsset('${a.id}')">Delete</button>
         </div>
       </div>`;
   }).join('');
 }
 
 // ── EXPORT ────────────────────────────────────────────────────────────
-function exportCustomJSON() {
-  const custom = getCustomAssets();
-  if (!custom.length) { alert('No new assets to export.'); return; }
-  const clean = custom.map(({_custom, ...rest}) => rest);
-  downloadJSON(clean, 'sreap_new_assets.json');
-}
-function exportOverridesJSON() {
-  const ov = getOverrides();
-  if (!Object.keys(ov).length) { alert('No edits to export.'); return; }
-  downloadJSON(ov, 'sreap_edits.json');
-}
-function downloadJSON(data, filename) {
+function exportAllJSON() {
+  const data = allAssets.map(({ isBuiltin, ...rest }) => rest);
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'sreap_assets.json'; a.click();
   URL.revokeObjectURL(url);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
-function init() {
-  loadAssets();
+async function init() {
+  document.getElementById('cardGrid').innerHTML =
+    '<div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--text-dim)">Loading assets…</div>';
+  await loadAssets();
   renderStats();
   renderCards();
   setFormMode('new');
