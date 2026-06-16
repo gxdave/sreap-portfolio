@@ -199,6 +199,7 @@
       <div class="headerTitle">Swiss Real Estate Asset Portfolio</div>
     </div>
     <div class="headerRight">
+      <button class="logoutBtn" id="adminBtn" onclick="openAdmin()" style="display:none;color:var(--gold);border:1px solid var(--gold);padding:5px 14px;border-radius:4px;">Admin</button>
       <button class="logoutBtn" onclick="logout()">Logout</button>
     </div>
   </header>
@@ -433,7 +434,10 @@ function checkPw() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
     init();
-    if (new URLSearchParams(window.location.search).has('admin')) openAdmin();
+    if (new URLSearchParams(window.location.search).has('admin')) {
+      document.getElementById('adminBtn').style.display = 'inline-block';
+      openAdmin();
+    }
   } else {
     document.getElementById('loginError').textContent = 'Incorrect access code.';
     document.getElementById('pwInput').value = '';
